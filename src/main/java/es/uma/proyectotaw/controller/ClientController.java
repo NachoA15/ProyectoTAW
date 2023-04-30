@@ -306,11 +306,11 @@ public class ClientController {
         }
 
         List<Client_AccountDTO> listaAccounts = this.accountService.getAccount();
-        List<String> listCurrencyPayment = this.currencyChangeService.getCurrencyChange();
+        List<String> listCurrency = this.paymentService.getPayment();
 
         model.addAttribute("accounts", listaAccounts);
         model.addAttribute("operations", listOperations);
-        model.addAttribute("currencyPayment", listCurrencyPayment);
+        model.addAttribute("currencyPayment", listCurrency);
         model.addAttribute("filter", filter);
         model.addAttribute("user", user);
 
