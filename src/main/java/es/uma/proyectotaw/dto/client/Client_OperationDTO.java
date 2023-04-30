@@ -4,7 +4,7 @@ package es.uma.proyectotaw.dto.client;
 import java.io.Serializable;
 import java.sql.Date;
 
-public class OperationDTO implements Serializable {
+public class Client_OperationDTO implements Serializable {
     private int id;
     private Client_AccountDTO accountOriginByOperation;
     private Client_AccountDTO accountDestinationByOperation;
@@ -13,7 +13,7 @@ public class OperationDTO implements Serializable {
     private CurrencyChangeDTO currencyChangeByCurrencyChange;
     private String paymentByPayment;
 
-    public OperationDTO() {
+    public Client_OperationDTO() {
     }
 
     public int getId() {

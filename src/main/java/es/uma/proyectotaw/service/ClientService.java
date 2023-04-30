@@ -1,12 +1,16 @@
 package es.uma.proyectotaw.service;
 
 import es.uma.proyectotaw.dao.*;
+import es.uma.proyectotaw.dto.client.Client_ClientDTO;
 import es.uma.proyectotaw.dto.management.FullClientDTO;
 import es.uma.proyectotaw.entity.*;
+import es.uma.proyectotaw.ui.ProfileAux;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -40,7 +44,7 @@ public class ClientService {
 
     public FullClientDTO getClientById(Integer id) {
         ClientEntity client = this.clientRepository.findById(id).orElse(null);
-        return client.toDTO();
+        return client.toFullDTO();
     }
 
     public void registerClientByID(Integer id) {
@@ -94,6 +98,62 @@ public class ClientService {
             IBAN = IBAN.substring(0,25);
         }
         return IBAN;
+    }
+
+    public Client_ClientDTO getClient(Integer idClient){
+        ClientEntity client = this.clientRepository.findById(idClient).orElse(null);
+
+        return client.toClientDTO();
+    }
+
+    public ProfileAux getProfileAux(Integer idClient){
+        ProfileAux profileAux = new ProfileAux();
+        ClientEntity client = this.clientRepository.findById(idClient).orElse(null);
+
+        profileAux.setIdClient(client.getId());
+        profileAux.setName(client.getPersonById().getName());
+        profileAux.setSurname(client.getPersonById().getSurname());
+        profileAux.setBirthDate(new SimpleDateFormat("yyyy-MM-dd").format(client.getPersonById().getBirthDate()));
+        profileAux.setPhone(client.getPhone());
+        profileAux.setIdentificationNumber(client.getIdentificationNumber());
+        profileAux.setStreet(client.getAddressByAddress().getStreet());
+        profileAux.setNumber(client.getAddressByAddress().getNumber());
+        profileAux.setCity(client.getAddressByAddress().getCity());
+        profileAux.setRegion(client.getAddressByAddress().getRegion());
+        profileAux.setZip_code(client.getAddressByAddress().getZipCode());
+        profileAux.setCountry(client.getAddressByAddress().getCountry());
+
+        return profileAux;
+    }
+
+    public void saveClient(ProfileAux profileAux) throws ParseException {
+        ClientEntity client = this.clientRepository.findById(profileAux.getIdClient()).orElse(null);
+        PersonEntity person = this.personRepository.getPersonByPersonClient(profileAux.getIdClient());
+        AddressEntity address = this.addressRepository.findById(client.getAddressByAddress().getId()).orElse(null);
+
+        person.setName(profileAux.getName());
+        person.setSurname(profileAux.getSurname());
+        person.setBirthDate(Date.valueOf(profileAux.getBirthDate()));
+
+        this.personRepository.save(person);
+
+        address.setStreet(profileAux.getStreet());
+        address.setRegion(profileAux.getRegion());
+        address.setNumber(profileAux.getNumber());
+        address.setCity(profileAux.getCity());
+        address.setZipCode(address.getZipCode());
+        address.setCountry(profileAux.getCountry());
+
+        this.addressRepository.save(address);
+
+        client.setPersonById(person);
+        client.setPhone(profileAux.getPhone());
+        client.setIdentificationNumber(profileAux.getIdentificationNumber());
+        client.setAddressByAddress(address);
+
+
+        this.clientRepository.save(client);
+
     }
 
 }

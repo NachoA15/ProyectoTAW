@@ -1,9 +1,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ page import="es.uma.proyectotaw.entity.Operation" %>
 <%@ page import="java.util.List" %>
-<%@ page import="es.uma.proyectotaw.dto.management.OperationDTO" %>
-<%@ page import="es.uma.proyectotaw.entity.User" %>
-<%@ page import="es.uma.proyectotaw.dto.UserDTO" %><%--
+<%@ page import="es.uma.proyectotaw.dto.UserDTO" %>
+<%@ page import="es.uma.proyectotaw.dto.client.Client_OperationDTO" %><%--
   Created by IntelliJ IDEA.
   User: Marina
   Date: 10/04/2023
@@ -12,7 +10,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    List<OperationDTO> listOperations = (List<OperationDTO>) request.getAttribute("operations");
+    List<Client_OperationDTO> listOperations = (List<Client_OperationDTO>) request.getAttribute("operations");
     UserDTO userDTO = (UserDTO) request.getAttribute("user");
 %>
 <html>
@@ -54,7 +52,7 @@
         <th width="150">AMOUNT</th>
     </tr>
     <%
-        for(OperationDTO operation : listOperations){
+        for(Client_OperationDTO operation : listOperations){
     %>
         <tr>
             <th width="150"><%=operation.getAccountOriginByOperation().getIban()%></th>

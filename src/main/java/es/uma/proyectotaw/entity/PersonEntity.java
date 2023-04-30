@@ -1,5 +1,6 @@
 package es.uma.proyectotaw.entity;
 
+import es.uma.proyectotaw.dto.client.Client_PersonDTO;
 import es.uma.proyectotaw.dto.management.FullPersonDTO;
 import es.uma.proyectotaw.dto.management.PartialPersonDTO;
 import es.uma.proyectotaw.dto.assistant.AssistantPersonDTO;
@@ -123,11 +124,14 @@ public class PersonEntity {
         dto.setClient(this.clientByPersonClient.toPartialDTO());
         return dto;
     }
+    /**
+     * @author Ignacio Alba
+     */
 
     public FullPersonDTO toDTO() {
         FullPersonDTO dto = new FullPersonDTO();
         if (this.clientByPersonClient != null) {
-            dto.setClient(this.clientByPersonClient.toDTO());
+            dto.setClient(this.clientByPersonClient.toFullDTO());
         }
         dto.setName(this.name);
         dto.setId(this.id);
@@ -146,6 +150,22 @@ public class PersonEntity {
             dto.setCompany("");
         }
         dto.setName(getName() + " " + getSurname());
+        return dto;
+    }
+
+    /**
+     * @author Marina Sayago
+     */
+    public Client_PersonDTO toClientPersonDTO(){
+        Client_PersonDTO dto = new Client_PersonDTO();
+
+        dto.setId(getId());
+        dto.setName(getName());
+        dto.setSurname(getSurname());
+        dto.setBirthDate(getBirthDate());
+        dto.setUserByPersonUser(getUserByPersonUser().toDTO());
+        dto.setClientByPersonClient(getClientByPersonClient().toClientDTO());
+
         return dto;
     }
 }

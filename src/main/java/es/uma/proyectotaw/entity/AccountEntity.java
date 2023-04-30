@@ -1,10 +1,13 @@
 package es.uma.proyectotaw.entity;
 
+import es.uma.proyectotaw.dto.client.Client_AccountDTO;
+import es.uma.proyectotaw.dto.client.Client_OperationDTO;
 import es.uma.proyectotaw.dto.management.FullAccountDTO;
 import es.uma.proyectotaw.dto.management.PartialAccountDTO;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -130,7 +133,7 @@ public class AccountEntity {
         return dto;
     }
 
-    public FullAccountDTO toDTO() {
+    public FullAccountDTO toFullDTO() {
         FullAccountDTO dto = new FullAccountDTO();
         dto.setId(this.id);
         dto.setIban(this.iban);
@@ -139,5 +142,27 @@ public class AccountEntity {
         dto.setOpeningDate(this.openingDate);
         dto.setStatus(this.accountStatusByAccountStatus.getState());
         return dto;
+    }
+
+    public Client_AccountDTO clientToAccountDTO(){
+        Client_AccountDTO dto = new Client_AccountDTO();
+
+        dto.setId(getId());
+        dto.setIban(getIban());
+        dto.setBalance(getBalance());
+        dto.setCurrency(getCurrency());
+        dto.setOpeningDate(getOpeningDate());
+        dto.setAccountStatusByAccountStatus(getAccountStatusByAccountStatus().toDTO());
+        dto.setClientByOwner(getClientByOwner().toClientDTO());
+
+        return dto;
+    }
+
+    protected Collection<Client_OperationDTO> listaEntidadesADTO (Collection<OperationEntity> lista) {
+        ArrayList dtos = new ArrayList<Client_OperationDTO>();
+
+        lista.forEach((final OperationEntity operation) -> dtos.add(operation.ClientToOperationDTO()));
+
+        return dtos;
     }
 }

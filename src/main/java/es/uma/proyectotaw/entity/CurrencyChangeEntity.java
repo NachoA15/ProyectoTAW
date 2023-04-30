@@ -1,5 +1,7 @@
 package es.uma.proyectotaw.entity;
 
+import es.uma.proyectotaw.dto.client.CurrencyChangeDTO;
+
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Objects;
@@ -63,5 +65,15 @@ public class CurrencyChangeEntity {
 
     public void setOperationsById(Collection<OperationEntity> operationsById) {
         this.operationsById = operationsById;
+    }
+
+    public CurrencyChangeDTO toDTO() {
+        CurrencyChangeDTO dto = new CurrencyChangeDTO();
+
+        dto.setId(getId());
+        dto.setDestinationCurrency(getDestinationCurrency());
+        dto.setOriginCurrency(getOriginCurrency());
+
+        return dto;
     }
 }

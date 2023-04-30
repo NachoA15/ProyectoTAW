@@ -134,7 +134,7 @@ public class CompanyEntity {
 
     public FullCompanyDTO toDTO() {
         FullCompanyDTO dto = new FullCompanyDTO();
-        dto.setClient(this.clientByCompanyClient.toDTO());
+        dto.setClient(this.clientByCompanyClient.toFullDTO());
         dto.setName(this.name);
         dto.setId(this.id);
         dto.setEmail(this.userByCompanyUser.getEmail());

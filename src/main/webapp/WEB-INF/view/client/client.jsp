@@ -1,5 +1,7 @@
 <%@ page import="java.text.DateFormat" %>
 <%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="es.uma.proyectotaw.dto.client.Client_PersonDTO" %>
+<%@ page import="es.uma.proyectotaw.dto.client.Client_AccountDTO" %>
 <%--
   Created by IntelliJ IDEA.
   User: Marina
@@ -9,8 +11,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    PersonDTO client = (PersonDTO) request.getAttribute("client");
-    AccountDTO account = (AccountDTO) request.getAttribute("account");
+    Client_PersonDTO client = (Client_PersonDTO) request.getAttribute("client");
+    Client_AccountDTO account = (Client_AccountDTO) request.getAttribute("account");
 %>
 <html>
 <head>
@@ -53,7 +55,7 @@
     <tr>
         <th>IBAN</th>
         <th>ACCOUNT STATUS</th>
-        <%if(!account.getAccountStatusByAccountStatus().getState().equals("Active")){%>
+        <%if(!account.getAccountStatusByAccountStatus().getStatus().equals("Active")){%>
         <th></th>
         <%
             }
@@ -65,11 +67,11 @@
     </tr>
     <tr>
         <th><%=account.getIban()%></th>
-        <th><%=account.getAccountStatusByAccountStatus().getState()%></th>
-        <%if(account.getAccountStatusByAccountStatus().getState().equals("Blocked") ){%>
+        <th><%=account.getAccountStatusByAccountStatus().getStatus()%></th>
+        <%if(account.getAccountStatusByAccountStatus().getStatus().equals("Blocked") ){%>
         <th><a href="/activation?id=<%=account.getId()%>">Request activation</a> </th>
         <%
-            }else if(account.getAccountStatusByAccountStatus().getState().equals("Pending")){
+            }else if(account.getAccountStatusByAccountStatus().getStatus().equals("Pending")){
         %>
         <th>Waiting for activation</th>
         <%

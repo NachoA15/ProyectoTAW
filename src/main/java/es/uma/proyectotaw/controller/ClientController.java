@@ -4,17 +4,23 @@ import es.uma.proyectotaw.dto.*;
 import es.uma.proyectotaw.dto.ClientStatusDTO;
 import es.uma.proyectotaw.dto.CompanyAreaDTO;
 import es.uma.proyectotaw.dto.client.Client_AccountDTO;
+import es.uma.proyectotaw.dto.client.Client_ClientDTO;
+import es.uma.proyectotaw.dto.client.Client_OperationDTO;
 import es.uma.proyectotaw.dto.client.Client_PersonDTO;
 import es.uma.proyectotaw.dto.management.*;
 import es.uma.proyectotaw.entity.UserEntity;
 import es.uma.proyectotaw.service.*;
 import es.uma.proyectotaw.ui.Filter;
+import es.uma.proyectotaw.ui.FilterOperations;
+import es.uma.proyectotaw.ui.OperationAux;
+import es.uma.proyectotaw.ui.ProfileAux;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpSession;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +45,14 @@ public class ClientController {
     @Autowired
     protected ClientService clientService;
 
-    @Autowired AccountService accountService;
+    @Autowired
+    protected AccountService accountService;
+    @Autowired
+    protected OperationService operationService;
+    @Autowired
+    protected CurrencyChangeService currencyChangeService;
+    @Autowired
+    protected PaymentService paymentService;
 
     /*
         =================================================================================================
@@ -227,6 +240,196 @@ public class ClientController {
         model.addAttribute("account", account);
 
         return "client/client";
+    }
+
+    @GetMapping("/updateProfile")
+    public String doUpdateProfile(Model model, HttpSession session, @RequestParam("id") Integer idClient){
+        UserDTO user = (UserDTO) session.getAttribute("client");
+
+        if (user == null) {
+            return "redirect:/";
+        }
+
+        ProfileAux profileAux = this.clientService.getProfileAux(idClient);
+
+        model.addAttribute("profileAux", profileAux);
+        model.addAttribute("user", user);
+
+        return "client/profile";
+    }
+
+    @PostMapping("/saveProfile")
+    public String doSaveProfile(HttpSession session, @ModelAttribute("profileAux") ProfileAux profileAux) throws ParseException {
+        UserDTO user = (UserDTO) session.getAttribute("client");
+
+        if (user == null) {
+            return "redirect:/";
+        }
+
+        this.clientService.saveClient(profileAux);
+
+        return "redirect:/client?id=" + user.getId();
+    }
+
+    @GetMapping("/seeOperations")
+    public String doSeeOperations(Model model, @RequestParam("id") Integer idClient, HttpSession session) throws ParseException {
+        UserDTO user = (UserDTO) session.getAttribute("client");
+
+        if (user == null) {
+            return "redirect:/";
+        }
+
+        FilterOperations filter = new FilterOperations();
+        Client_ClientDTO clientDTO = this.clientService.getClient(idClient);
+        filter.setClient(clientDTO.getId());
+
+        return this.doShowOperations(filter, model, clientDTO.getId(), session);
+    }
+
+    public String doShowOperations(FilterOperations filter, Model model, Integer client, HttpSession session) throws ParseException {
+        UserDTO user = (UserDTO) session.getAttribute("client");
+
+        if (user == null) {
+            return "redirect:/";
+        }
+
+        List<Client_OperationDTO> listOperations;
+
+        if(filter.getOrigin() == null && filter.getDestination() == null && filter.getDate() == "" &&
+                filter.getAmount() == "" && filter.getCurrency() == "" && filter.getCurrency() == ""|| filter == null){
+            listOperations = this.operationService.listOperations(filter, client);
+            filter = new FilterOperations();
+            filter.setClient(client);
+
+        }else{
+            listOperations = this.operationService.listOperations(filter, client);
+        }
+
+        List<Client_AccountDTO> listaAccounts = this.accountService.getAccount();
+        List<String> listCurrencyPayment = this.currencyChangeService.getCurrencyChange();
+
+        model.addAttribute("accounts", listaAccounts);
+        model.addAttribute("operations", listOperations);
+        model.addAttribute("currencyPayment", listCurrencyPayment);
+        model.addAttribute("filter", filter);
+        model.addAttribute("user", user);
+
+
+        return "client/operations";
+    }
+
+    @PostMapping("/client/filter")
+    public String doFiltrarOperaciones(@ModelAttribute("filter")FilterOperations filter,
+                                       Model model, HttpSession session) throws ParseException {
+        UserDTO user = (UserDTO) session.getAttribute("client");
+
+        if (user == null) {
+            return "redirect:/";
+        }
+
+        return this.doShowOperations(filter, model, filter.getClient(),session);
+
+    }
+
+    @GetMapping("/transference")
+    public String doMakeATransference(Model model, @RequestParam("id") Integer idClient, HttpSession session){
+        UserDTO user = (UserDTO) session.getAttribute("client");
+        String url = "client/transference";
+
+        if (user == null) {
+            return "redirect:/";
+        }
+
+        Client_AccountDTO accountDTO = this.accountService.getAccountByIdClient(idClient);
+
+        if(!accountDTO.getAccountStatusByAccountStatus().getStatus().equals("Active")){
+            url = "redirect:/client?id="+ user.getId();
+            //Tendria que poner un mensaje de error
+        }else{
+            OperationAux operation = new OperationAux();
+            operation.setOrigin(accountDTO.getId());
+
+            List<Client_AccountDTO> listAccounts = this.accountService.getAccountWithoutMe(idClient);
+            List<String> listCurrency = this.paymentService.getPayment();
+
+            model.addAttribute("operation", operation);
+            model.addAttribute("accounts", listAccounts);
+            model.addAttribute("currency", listCurrency);
+            model.addAttribute("user", user);
+        }
+
+
+
+        return url;
+    }
+
+    @PostMapping("/transference/save")
+    public String doSaveTransference(@ModelAttribute("operation") OperationAux operationAux, HttpSession session){
+        UserDTO user = (UserDTO) session.getAttribute("client");
+
+        if (user == null) {
+            return "redirect:/";
+        }
+
+        this.operationService.saveTransference(operationAux);
+
+        return "redirect:/client?id=" + user.getId();
+    }
+
+    @GetMapping("/currencyChange")
+    public String doMakeACurrencyChange(Model model, @RequestParam("id") Integer idClient, HttpSession session){
+        String url = "client/currencyChange";
+        UserDTO user = (UserDTO) session.getAttribute("client");
+
+        if (user == null) {
+            return "redirect:/";
+        }
+
+        Client_AccountDTO accountDTO = this.accountService.getAccountByIdClient(idClient);
+
+
+        if(!accountDTO.getAccountStatusByAccountStatus().getStatus().equals("Active")){
+            url = "redirect:/client?id="+ user.getId();
+        }else{
+            OperationAux operation = new OperationAux();
+            operation.setClient(accountDTO.getClientByOwner().getId());
+            operation.setOrigin(accountDTO.getId());
+            operation.setDestination(accountDTO.getId());
+
+
+            List<String> listCurrency = this.paymentService.getPayment();
+
+            model.addAttribute("operation", operation);
+            model.addAttribute("currency", listCurrency);
+            model.addAttribute("user", user);
+        }
+        return url;
+    }
+
+    @PostMapping("/currencyChange/save")
+    public String doSaveCurrencyChange(@ModelAttribute("operation") OperationAux operationAux, HttpSession session){
+        UserDTO user = (UserDTO) session.getAttribute("client");
+
+        if (user == null) {
+            return "redirect:/";
+        }
+
+        this.operationService.saveCurrencyChange(operationAux);
+
+        return "redirect:/client?id=" + user.getId();
+    }
+
+    @GetMapping("/activation")
+    public String doActivation(@RequestParam("id")Integer idAccount, HttpSession session){
+        UserDTO user = (UserDTO) session.getAttribute("client");
+
+        if (user == null) {
+            return "redirect:/";
+        }
+
+        this.accountService.saveActivation(idAccount);
+
+        return "redirect:/client?id=" + user.getId();
     }
 
     /*

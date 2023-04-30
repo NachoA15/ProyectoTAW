@@ -1,5 +1,6 @@
 package es.uma.proyectotaw.entity;
 
+import es.uma.proyectotaw.dto.client.Client_OperationDTO;
 import es.uma.proyectotaw.dto.management.OperationDTO;
 
 import javax.persistence.*;
@@ -101,7 +102,7 @@ public class OperationEntity {
         this.paymentByPayment = paymentByPayment;
     }
 
-    public OperationDTO toDTO() {
+    public OperationDTO ManagementToDTO() {
         OperationDTO dto = new OperationDTO();
         dto.setId(this.id);
         dto.setOrigin(this.accountByOrigin.toPartialDTO());
@@ -110,5 +111,18 @@ public class OperationEntity {
         dto.setAmount(this.amount);
         dto.setCurrency(this.paymentByPayment.getCurrency());
         return dto;
+    }
+    public Client_OperationDTO ClientToOperationDTO() {
+        Client_OperationDTO operationDTO = new Client_OperationDTO();
+
+        operationDTO.setAccountOriginByOperation(getAccountByOrigin().clientToAccountDTO());
+        operationDTO.setAmount(getAmount());
+        operationDTO.setId(getId());
+        operationDTO.setDate(getDate());
+        operationDTO.setAccountDestinationByOperation(getAccountByDestination().clientToAccountDTO());
+        if(getPaymentByPayment() != null) operationDTO.setPaymentByPayment(getPaymentByPayment().getCurrency());
+        if(getCurrencyChangeByCurrencyChange() != null) operationDTO.setCurrencyChangeByCurrencyChange(getCurrencyChangeByCurrencyChange().toDTO());
+
+        return operationDTO;
     }
 }

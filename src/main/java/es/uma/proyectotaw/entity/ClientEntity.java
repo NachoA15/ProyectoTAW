@@ -1,5 +1,6 @@
 package es.uma.proyectotaw.entity;
 
+import es.uma.proyectotaw.dto.client.Client_ClientDTO;
 import es.uma.proyectotaw.dto.management.FullClientDTO;
 import es.uma.proyectotaw.dto.management.PartialClientDTO;
 
@@ -131,7 +132,7 @@ public class ClientEntity {
         return dto;
     }
 
-    public FullClientDTO toDTO() {
+    public FullClientDTO toFullDTO() {
         FullClientDTO dto = new FullClientDTO();
         dto.setId(this.id);
         dto.setIdentificationNumber(this.identificationNumber);
@@ -139,8 +140,20 @@ public class ClientEntity {
         dto.setPhone(this.phone);
         dto.setAddress(this.addressByAddress.toDTO());
         if (this.accountById != null) {
-            dto.setAccount(this.accountById.toDTO());
+            dto.setAccount(this.accountById.toFullDTO());
         }
+        return dto;
+    }
+
+    public Client_ClientDTO toClientDTO(){
+        Client_ClientDTO dto = new Client_ClientDTO();
+
+        dto.setId(getId());
+        dto.setPhone(getPhone());
+        dto.setIdentificationNumber(getIdentificationNumber());
+        dto.setAddressByAddress(getAddressByAddress().toDTO());
+        dto.setClientStatusByStatus(getClientStatusByStatus().getStatus());
+
         return dto;
     }
 }

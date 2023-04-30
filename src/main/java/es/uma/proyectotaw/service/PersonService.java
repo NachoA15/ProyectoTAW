@@ -1,6 +1,7 @@
 package es.uma.proyectotaw.service;
 
 import es.uma.proyectotaw.dao.PersonRepository;
+import es.uma.proyectotaw.dto.client.Client_PersonDTO;
 import es.uma.proyectotaw.dto.management.FullPersonDTO;
 import es.uma.proyectotaw.dto.management.PartialPersonDTO;
 import es.uma.proyectotaw.entity.PersonEntity;
@@ -10,14 +11,15 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author Ignacio Alba
- */
 @Service
 public class PersonService {
 
     @Autowired
     protected PersonRepository personRepository;
+
+    /**
+     * @author Ignacio Alba
+     */
 
     public List<PartialPersonDTO> getRegisteredPersons() {
         List<PersonEntity> registeredPersons = this.personRepository.getRegisteredPersons();
@@ -45,5 +47,14 @@ public class PersonService {
         list.forEach((final PersonEntity p) -> personPartialDTOS.add(p.toPartialDTO()));
 
         return personPartialDTOS;
+    }
+
+    /**
+     * @author Marina Sayago
+     */
+
+    public Client_PersonDTO getPersonByUser(Integer idUser){
+        PersonEntity person = this.personRepository.getPersonByPersonUser(idUser);
+        return person.toClientPersonDTO();
     }
 }

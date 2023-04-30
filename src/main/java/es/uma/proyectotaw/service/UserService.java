@@ -65,11 +65,21 @@ public class UserService {
         user.setPassword(signUp.getPassword());
         user.setEmail(signUp.getEmail());
 
+
+        address.setCity(signUp.getCity());
+        address.setCountry(signUp.getCountry());
+        address.setNumber(signUp.getNumber());
+        address.setRegion(signUp.getRegion());
+        address.setStreet(signUp.getStreet());
+        address.setZipCode(signUp.getZipCode());
+
         this.userRepository.save(user);
 
         client.setAddressByAddress(address);
         client.setClientStatusByStatus(clientStatus);
         client.setIdentificationNumber(id+"");
+        client.setPhone(signUp.getPhone());
+
         this.addressRepository.save(address);
         this.clientRepository.save(client);
 

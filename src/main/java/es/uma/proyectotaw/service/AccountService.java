@@ -20,12 +20,12 @@ public class AccountService {
 
     public Client_AccountDTO getAccountByIdClient(Integer idClient){
         AccountEntity account = this.accountRepository.getAccountByIdClient(idClient);
-        return account.toDTO();
+        return account.clientToAccountDTO();
     }
 
     public Client_AccountDTO getAccountById(Integer id){
         AccountEntity account = this.accountRepository.findById(id).orElse(null);
-        return account.toDTO();
+        return account.clientToAccountDTO();
     }
 
     public List<Client_AccountDTO> getAccount(){
@@ -35,9 +35,9 @@ public class AccountService {
 
 
     protected List<Client_AccountDTO> listaEntidadesADTO (List<AccountEntity> lista) {
-        ArrayList dtos = new ArrayList<AccountDTO>();
+        ArrayList dtos = new ArrayList<Client_AccountDTO>();
 
-        lista.forEach((final Account account) -> dtos.add(account.toDTO()));
+        lista.forEach((final AccountEntity account) -> dtos.add(account.clientToAccountDTO()));
 
         return dtos;
     }
