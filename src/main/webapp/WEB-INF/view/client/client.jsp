@@ -95,6 +95,8 @@
 
 <h3><a href="/currencyChange?id=<%=client.getClientByPersonClient().getId()%>"> Make a currency change</a> </h3>
 
+<h3><a href="/client/chat/<%=client.getId()%>">Chat with assistant</a></h3>
+
 <h3><a href="/logout"> LogOut</a> </h3>
 </body>
 </html>

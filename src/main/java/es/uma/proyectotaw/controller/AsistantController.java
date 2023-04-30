@@ -87,6 +87,9 @@ public class AsistantController {
     @GetMapping("/assistant/newMessage/{id}")
     public String newMessage(@PathVariable("id") Integer idChat, Model model, HttpSession session){
         UserDTO user = (UserDTO) session.getAttribute("assistant");
+        if(user == null){
+            user = (UserDTO) session.getAttribute("client");
+        }
         AssistantMessageDTO newMessage = this.chatService.newMessage(idChat, user);
         model.addAttribute("newMessage", newMessage);
         return "/assistant/newMessage";
@@ -95,13 +98,15 @@ public class AsistantController {
     @PostMapping("/assistant/newMessage")
     public String saveNewMessage(@ModelAttribute("newMessage") AssistantMessageDTO assistantMessageDTO, HttpSession session){
         UserDTO user = (UserDTO) session.getAttribute("assistant");
+        if(user == null){
+            user = (UserDTO) session.getAttribute("client");
+        }
         this.chatService.saveNewMessage(assistantMessageDTO, user);
         String urlTo = "redirect:/assistant/messages/" + assistantMessageDTO.getChat() + "";
         return urlTo;
     }
 
-    @GetMapping("/newChat/{id}")
-    public String createNewChat(@PathVariable("id") Integer idPerson, Model model, HttpSession session){
+    private String createNewChat(Integer idPerson, Model model, HttpSession session){
         AssistantChatDTO chat = this.chatService.createNewChat(idPerson);
         model.addAttribute("chat", chat);
         List<AssistantMessageDTO> messages = this.chatService.getMessages(chat.getId());
@@ -112,10 +117,15 @@ public class AsistantController {
     @GetMapping("/client/chat/{id}")
     public String getClientChat(@PathVariable("id") Integer idPerson, Model model, HttpSession session){
         AssistantChatDTO chat = this.chatService.getClientChat(idPerson);
-        model.addAttribute("chat", chat);
-        List<AssistantMessageDTO> messages = this.chatService.getMessages(chat.getId());
-        model.addAttribute("messages", messages);
-        return "assistant/messages";
+        if(chat == null){
+            return createNewChat(idPerson, model, session);
+        }else{
+            model.addAttribute("chat", chat);
+            List<AssistantMessageDTO> messages = this.chatService.getMessages(chat.getId());
+            model.addAttribute("messages", messages);
+            return "assistant/messages";
+        }
+
     }
 
     /*
