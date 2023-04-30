@@ -39,6 +39,8 @@ public class ClientController {
     @Autowired
     protected ClientService clientService;
 
+    @Autowired AccountService accountService;
+
     /*
         =================================================================================================
             GESTOR  -- Autor: Ignacio Alba

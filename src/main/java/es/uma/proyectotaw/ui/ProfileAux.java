@@ -1,9 +1,5 @@
 package es.uma.proyectotaw.ui;
 
-import es.uma.proyectotaw.entity.Client;
-
-import java.sql.Date;
-
 public class ProfileAux {
 
     private int idClient;

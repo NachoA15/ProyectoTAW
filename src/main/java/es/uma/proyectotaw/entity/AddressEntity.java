@@ -1,5 +1,7 @@
 package es.uma.proyectotaw.entity;
 
+import es.uma.proyectotaw.dto.AddressDTO;
+
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Objects;

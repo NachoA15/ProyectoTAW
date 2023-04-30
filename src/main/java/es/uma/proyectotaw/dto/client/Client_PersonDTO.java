@@ -1,5 +1,7 @@
 package es.uma.proyectotaw.dto.client;
 
+import es.uma.proyectotaw.dto.UserDTO;
+
 import java.io.Serializable;
 import java.sql.Date;
 

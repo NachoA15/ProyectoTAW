@@ -1,9 +1,5 @@
 package es.uma.proyectotaw.ui;
 
-import es.uma.proyectotaw.dto.ClientDTO;
-import es.uma.proyectotaw.entity.Account;
-import es.uma.proyectotaw.entity.Client;
-
 import java.util.Date;
 
 public class FilterOperations {

@@ -1,7 +1,5 @@
 package es.uma.proyectotaw.ui;
 
-import es.uma.proyectotaw.entity.Account;
-
 public class OperationAux {
 
     private Integer client;
