@@ -1,8 +1,6 @@
 package es.uma.proyectotaw.ui;
 
-import java.util.Date;
-
-public class FilterOperations {
+public class FilterOperationsClient {
 
     private Integer client;
 
@@ -14,7 +12,7 @@ public class FilterOperations {
     private String payment;
 
 
-    public FilterOperations() {
+    public FilterOperationsClient() {
         this.amount = "";
         this.date = "";
         this.currency = "";

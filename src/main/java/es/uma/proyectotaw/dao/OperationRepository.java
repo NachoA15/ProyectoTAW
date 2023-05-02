@@ -67,4 +67,12 @@ public interface OperationRepository extends JpaRepository<OperationEntity, Inte
                                                                      @Param("accountDestination") Integer accountDestination,
                                                                      @Param("date") Date date,@Param("amount") Double amount);
 
+    /**
+     * @author: Martin Pur
+     */
+
+    @Query("select o from OperationEntity o where o.accountByOrigin.clientByOwner.personById.companyByRelatedCompany.id = :companyId " +
+            "or o.accountByDestination.clientByOwner.personById.companyByRelatedCompany.id = :companyId")
+    public List<OperationEntity> getOperationsByCompanyRelatedPeople(@Param("companyId") Integer companyId);
+
 }

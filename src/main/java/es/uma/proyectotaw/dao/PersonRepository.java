@@ -39,4 +39,65 @@ public interface PersonRepository extends JpaRepository<PersonEntity, Integer> {
     @Query("select p from PersonEntity p where p.clientByPersonClient.id = :idClient")
     public PersonEntity getPersonByPersonClient(@Param("idClient") Integer idClient);
 
+
+    /**
+     * @author Martin Pur
+     */
+
+
+    @Query("select p from PersonEntity p where p.companyByRelatedCompany.id = :idCompany " +
+            "and (p.userByPersonUser.roleUserByRole.id = 4 " +
+            "or p.userByPersonUser.roleUserByRole.id = 5)")
+    public List<PersonEntity> getPeopleByCompany(@Param("idCompany") Integer idCompany);
+
+    @Query("select p from PersonEntity p where p.userByPersonUser.email = :email")
+    public List<PersonEntity> getByEmail(@Param("email") String email);
+
+    @Query("select p from PersonEntity p where p.userByPersonUser.email = :email and p.userByPersonUser.roleUserByRole.id = :idRole")
+    public List<PersonEntity> getByEmailAndRole(@Param("email") String email, @Param("idRole") Integer idRole);
+
+    @Query("select p from PersonEntity p where p.name = :name and p.companyByRelatedCompany.id = :idCompany")
+    public List<PersonEntity> getByName(@Param("name") String name, @Param("idCompany") Integer idCompany);
+
+    @Query("select p from PersonEntity p where p.surname = :surname and p.companyByRelatedCompany.id = :idCompany")
+    public List<PersonEntity> getBySurname(@Param("surname") String surname, @Param("idCompany") Integer idCompany);
+
+    @Query("select p from PersonEntity p where p.clientByPersonClient.addressByAddress.country = :country and p.companyByRelatedCompany.id = :idCompany")
+    public List<PersonEntity> getByCountry(@Param("country") String country, @Param("idCompany") Integer idCompany);
+
+    @Query("select p from PersonEntity p where p.userByPersonUser.roleUserByRole.id = :idRole and p.companyByRelatedCompany.id = :idCompany")
+    public List<PersonEntity> getByRole(@Param("idRole") Integer idRole, @Param("idCompany") Integer idCompany);
+
+    @Query("select p from PersonEntity p where p.name = :name and p.surname = :surname and p.companyByRelatedCompany.id = :idCompany")
+    public List<PersonEntity> getByNameAndSurname(@Param("name") String name, @Param("surname") String surname, @Param("idCompany") Integer idCompany);
+
+    @Query("select p from PersonEntity p where p.name = :name and p.clientByPersonClient.addressByAddress.country = :country and p.companyByRelatedCompany.id = :idCompany")
+    public List<PersonEntity> getByNameAndCountry(@Param("name") String name, @Param("country") String country, @Param("idCompany") Integer idCompany);
+
+    @Query("select p from PersonEntity p where p.name = :name and p.userByPersonUser.roleUserByRole.id = :idRole and p.companyByRelatedCompany.id = :idCompany")
+    public List<PersonEntity> getByNameAndRole(@Param("name") String name, @Param("idRole") Integer idRole, @Param("idCompany") Integer idCompany);
+
+    @Query("select p from PersonEntity p where p.surname = :surname and p.clientByPersonClient.addressByAddress.country = :country and p.companyByRelatedCompany.id = :idCompany")
+    public List<PersonEntity> getBySurnameAndCountry(@Param("surname") String surname, @Param("country") String country, @Param("idCompany") Integer idCompany);
+
+    @Query("select p from PersonEntity p where p.surname = :surname and p.userByPersonUser.roleUserByRole.id = :idRole and p.companyByRelatedCompany.id = :idCompany")
+    public List<PersonEntity> getBySurnameAndRole(@Param("surname") String surname, @Param("idRole") Integer idRole, @Param("idCompany") Integer idCompany);
+
+    @Query("select p from PersonEntity p where p.clientByPersonClient.addressByAddress.country = :country and p.userByPersonUser.roleUserByRole.id = :idRole and p.companyByRelatedCompany.id = :idCompany")
+    public List<PersonEntity> getByCountryAndRole(@Param("country") String country, @Param("idRole") Integer idRole, @Param("idCompany") Integer idCompany);
+
+    @Query("select p from PersonEntity p where p.surname = :surname and p.clientByPersonClient.addressByAddress.country = :country and p.userByPersonUser.roleUserByRole.id = :idRole and p.companyByRelatedCompany.id = :idCompany")
+    public List<PersonEntity> getBySurnameCountryRole(@Param("surname") String surname, @Param("country") String country, @Param("idRole") Integer idRole, @Param("idCompany") Integer idCompany);
+
+    @Query("select p from PersonEntity p where p.name = :name and p.clientByPersonClient.addressByAddress.country = :country and p.userByPersonUser.roleUserByRole.id = :idRole and p.companyByRelatedCompany.id = :idCompany")
+    public List<PersonEntity> getByNameCountryRole(@Param("name") String name, @Param("country") String country, @Param("idRole") Integer idRole, @Param("idCompany") Integer idCompany);
+
+    @Query("select p from PersonEntity p where p.name = :name and p.surname = :surname and p.userByPersonUser.roleUserByRole.id = :idRole and p.companyByRelatedCompany.id = :idCompany")
+    public List<PersonEntity> getByNameSurnameRole(@Param("name") String name, @Param("surname") String surname, @Param("idRole") Integer idRole, @Param("idCompany") Integer idCompany);
+
+    @Query("select p from PersonEntity p where p.name = :name and p.surname = :surname and p.clientByPersonClient.addressByAddress.country = :country and p.companyByRelatedCompany.id = :idCompany")
+    public List<PersonEntity> getByNameSurnameCountry(@Param("name") String name, @Param("surname") String surname, @Param("country") String country, @Param("idCompany") Integer idCompany);
+
+    @Query("select p from PersonEntity p where p.name = :name and p.surname = :surname and p.clientByPersonClient.addressByAddress.country = :country and p.userByPersonUser.roleUserByRole.id = :idRole and p.companyByRelatedCompany.id = :idCompany")
+    public List<PersonEntity> getByNameSurnameCountryRole(@Param("name") String name, @Param("surname") String surname, @Param("country") String country, @Param("idRole") Integer idRole, @Param("idCompany") Integer idCompany);
 }

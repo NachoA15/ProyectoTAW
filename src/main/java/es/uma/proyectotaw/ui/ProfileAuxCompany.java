@@ -1,11 +1,13 @@
 package es.uma.proyectotaw.ui;
 
-public class ProfileAux {
+import java.sql.Date;
+
+public class ProfileAuxCompany {
 
     private int idClient;
     private String name;
     private String surname;
-    private String birthDate;
+    private Date birthDate;
     private String identificationNumber;
     private String phone;
     private String street;
@@ -16,7 +18,7 @@ public class ProfileAux {
     private String country;
 
 
-    public ProfileAux(){
+    public ProfileAuxCompany(){
         this.name = "";
         this.surname = "";
         this.birthDate = null;
@@ -53,11 +55,11 @@ public class ProfileAux {
         this.surname = surname;
     }
 
-    public String getBirthDate() {
+    public Date getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(String birthDate) {
+    public void setBirthDate(Date birthDate) {
         this.birthDate = birthDate;
     }
 
@@ -119,8 +121,8 @@ public class ProfileAux {
     public String getCountry() {
         return country;
     }
+
     public void setCountry(String country) {
         this.country = country;
     }
-
 }

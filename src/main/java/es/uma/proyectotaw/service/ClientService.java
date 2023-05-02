@@ -4,7 +4,7 @@ import es.uma.proyectotaw.dao.*;
 import es.uma.proyectotaw.dto.client.Client_ClientDTO;
 import es.uma.proyectotaw.dto.management.FullClientDTO;
 import es.uma.proyectotaw.entity.*;
-import es.uma.proyectotaw.ui.ProfileAux;
+import es.uma.proyectotaw.ui.ProfileAuxClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -106,49 +106,49 @@ public class ClientService {
         return client.toClientDTO();
     }
 
-    public ProfileAux getProfileAux(Integer idClient){
-        ProfileAux profileAux = new ProfileAux();
+    public ProfileAuxClient getProfileAux(Integer idClient){
+        ProfileAuxClient profileAuxClient = new ProfileAuxClient();
         ClientEntity client = this.clientRepository.findById(idClient).orElse(null);
 
-        profileAux.setIdClient(client.getId());
-        profileAux.setName(client.getPersonById().getName());
-        profileAux.setSurname(client.getPersonById().getSurname());
-        profileAux.setBirthDate(new SimpleDateFormat("yyyy-MM-dd").format(client.getPersonById().getBirthDate()));
-        profileAux.setPhone(client.getPhone());
-        profileAux.setIdentificationNumber(client.getIdentificationNumber());
-        profileAux.setStreet(client.getAddressByAddress().getStreet());
-        profileAux.setNumber(client.getAddressByAddress().getNumber());
-        profileAux.setCity(client.getAddressByAddress().getCity());
-        profileAux.setRegion(client.getAddressByAddress().getRegion());
-        profileAux.setZip_code(client.getAddressByAddress().getZipCode());
-        profileAux.setCountry(client.getAddressByAddress().getCountry());
+        profileAuxClient.setIdClient(client.getId());
+        profileAuxClient.setName(client.getPersonById().getName());
+        profileAuxClient.setSurname(client.getPersonById().getSurname());
+        profileAuxClient.setBirthDate(new SimpleDateFormat("yyyy-MM-dd").format(client.getPersonById().getBirthDate()));
+        profileAuxClient.setPhone(client.getPhone());
+        profileAuxClient.setIdentificationNumber(client.getIdentificationNumber());
+        profileAuxClient.setStreet(client.getAddressByAddress().getStreet());
+        profileAuxClient.setNumber(client.getAddressByAddress().getNumber());
+        profileAuxClient.setCity(client.getAddressByAddress().getCity());
+        profileAuxClient.setRegion(client.getAddressByAddress().getRegion());
+        profileAuxClient.setZip_code(client.getAddressByAddress().getZipCode());
+        profileAuxClient.setCountry(client.getAddressByAddress().getCountry());
 
-        return profileAux;
+        return profileAuxClient;
     }
 
-    public void saveClient(ProfileAux profileAux) throws ParseException {
-        ClientEntity client = this.clientRepository.findById(profileAux.getIdClient()).orElse(null);
-        PersonEntity person = this.personRepository.getPersonByPersonClient(profileAux.getIdClient());
+    public void saveClient(ProfileAuxClient profileAuxClient) throws ParseException {
+        ClientEntity client = this.clientRepository.findById(profileAuxClient.getIdClient()).orElse(null);
+        PersonEntity person = this.personRepository.getPersonByPersonClient(profileAuxClient.getIdClient());
         AddressEntity address = this.addressRepository.findById(client.getAddressByAddress().getId()).orElse(null);
 
-        person.setName(profileAux.getName());
-        person.setSurname(profileAux.getSurname());
-        person.setBirthDate(Date.valueOf(profileAux.getBirthDate()));
+        person.setName(profileAuxClient.getName());
+        person.setSurname(profileAuxClient.getSurname());
+        person.setBirthDate(Date.valueOf(profileAuxClient.getBirthDate()));
 
         this.personRepository.save(person);
 
-        address.setStreet(profileAux.getStreet());
-        address.setRegion(profileAux.getRegion());
-        address.setNumber(profileAux.getNumber());
-        address.setCity(profileAux.getCity());
+        address.setStreet(profileAuxClient.getStreet());
+        address.setRegion(profileAuxClient.getRegion());
+        address.setNumber(profileAuxClient.getNumber());
+        address.setCity(profileAuxClient.getCity());
         address.setZipCode(address.getZipCode());
-        address.setCountry(profileAux.getCountry());
+        address.setCountry(profileAuxClient.getCountry());
 
         this.addressRepository.save(address);
 
         client.setPersonById(person);
-        client.setPhone(profileAux.getPhone());
-        client.setIdentificationNumber(profileAux.getIdentificationNumber());
+        client.setPhone(profileAuxClient.getPhone());
+        client.setIdentificationNumber(profileAuxClient.getIdentificationNumber());
         client.setAddressByAddress(address);
 
 

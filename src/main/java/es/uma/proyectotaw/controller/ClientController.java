@@ -11,9 +11,9 @@ import es.uma.proyectotaw.dto.management.*;
 import es.uma.proyectotaw.entity.UserEntity;
 import es.uma.proyectotaw.service.*;
 import es.uma.proyectotaw.ui.Filter;
-import es.uma.proyectotaw.ui.FilterOperations;
-import es.uma.proyectotaw.ui.OperationAux;
-import es.uma.proyectotaw.ui.ProfileAux;
+import es.uma.proyectotaw.ui.FilterOperationsClient;
+import es.uma.proyectotaw.ui.OperationAuxClient;
+import es.uma.proyectotaw.ui.ProfileAuxClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -73,7 +73,7 @@ public class ClientController {
     private String processFiltering(Filter filter, Model model, HttpSession session) {
 
         // Comprobar que el usuario es gestor
-        UserEntity user = (UserEntity) session.getAttribute("management");
+        UserDTO user = (UserDTO) session.getAttribute("management");
         if (user == null) {
             return "redirect:/";
         }
@@ -250,23 +250,23 @@ public class ClientController {
             return "redirect:/";
         }
 
-        ProfileAux profileAux = this.clientService.getProfileAux(idClient);
+        ProfileAuxClient profileAuxClient = this.clientService.getProfileAux(idClient);
 
-        model.addAttribute("profileAux", profileAux);
+        model.addAttribute("profileAux", profileAuxClient);
         model.addAttribute("user", user);
 
         return "client/profile";
     }
 
     @PostMapping("/saveProfile")
-    public String doSaveProfile(HttpSession session, @ModelAttribute("profileAux") ProfileAux profileAux) throws ParseException {
+    public String doSaveProfile(HttpSession session, @ModelAttribute("profileAux") ProfileAuxClient profileAuxClient) throws ParseException {
         UserDTO user = (UserDTO) session.getAttribute("client");
 
         if (user == null) {
             return "redirect:/";
         }
 
-        this.clientService.saveClient(profileAux);
+        this.clientService.saveClient(profileAuxClient);
 
         return "redirect:/client?id=" + user.getId();
     }
@@ -279,14 +279,14 @@ public class ClientController {
             return "redirect:/";
         }
 
-        FilterOperations filter = new FilterOperations();
+        FilterOperationsClient filter = new FilterOperationsClient();
         Client_ClientDTO clientDTO = this.clientService.getClient(idClient);
         filter.setClient(clientDTO.getId());
 
         return this.doShowOperations(filter, model, clientDTO.getId(), session);
     }
 
-    public String doShowOperations(FilterOperations filter, Model model, Integer client, HttpSession session) throws ParseException {
+    public String doShowOperations(FilterOperationsClient filter, Model model, Integer client, HttpSession session) throws ParseException {
         UserDTO user = (UserDTO) session.getAttribute("client");
 
         if (user == null) {
@@ -298,7 +298,7 @@ public class ClientController {
         if(filter.getOrigin() == null && filter.getDestination() == null && filter.getDate() == "" &&
                 filter.getAmount() == "" && filter.getCurrency() == "" && filter.getCurrency() == ""|| filter == null){
             listOperations = this.operationService.listOperations(filter, client);
-            filter = new FilterOperations();
+            filter = new FilterOperationsClient();
             filter.setClient(client);
 
         }else{
@@ -319,7 +319,7 @@ public class ClientController {
     }
 
     @PostMapping("/client/filter")
-    public String doFiltrarOperaciones(@ModelAttribute("filter")FilterOperations filter,
+    public String doFiltrarOperaciones(@ModelAttribute("filter") FilterOperationsClient filter,
                                        Model model, HttpSession session) throws ParseException {
         UserDTO user = (UserDTO) session.getAttribute("client");
 
@@ -346,7 +346,7 @@ public class ClientController {
             url = "redirect:/client?id="+ user.getId();
             //Tendria que poner un mensaje de error
         }else{
-            OperationAux operation = new OperationAux();
+            OperationAuxClient operation = new OperationAuxClient();
             operation.setOrigin(accountDTO.getId());
 
             List<Client_AccountDTO> listAccounts = this.accountService.getAccountWithoutMe(idClient);
@@ -364,14 +364,14 @@ public class ClientController {
     }
 
     @PostMapping("/transference/save")
-    public String doSaveTransference(@ModelAttribute("operation") OperationAux operationAux, HttpSession session){
+    public String doSaveTransference(@ModelAttribute("operation") OperationAuxClient operationAuxClient, HttpSession session){
         UserDTO user = (UserDTO) session.getAttribute("client");
 
         if (user == null) {
             return "redirect:/";
         }
 
-        this.operationService.saveTransference(operationAux);
+        this.operationService.saveTransference(operationAuxClient);
 
         return "redirect:/client?id=" + user.getId();
     }
@@ -391,7 +391,7 @@ public class ClientController {
         if(!accountDTO.getAccountStatusByAccountStatus().getStatus().equals("Active")){
             url = "redirect:/client?id="+ user.getId();
         }else{
-            OperationAux operation = new OperationAux();
+            OperationAuxClient operation = new OperationAuxClient();
             operation.setClient(accountDTO.getClientByOwner().getId());
             operation.setOrigin(accountDTO.getId());
             operation.setDestination(accountDTO.getId());
@@ -407,14 +407,14 @@ public class ClientController {
     }
 
     @PostMapping("/currencyChange/save")
-    public String doSaveCurrencyChange(@ModelAttribute("operation") OperationAux operationAux, HttpSession session){
+    public String doSaveCurrencyChange(@ModelAttribute("operation") OperationAuxClient operationAuxClient, HttpSession session){
         UserDTO user = (UserDTO) session.getAttribute("client");
 
         if (user == null) {
             return "redirect:/";
         }
 
-        this.operationService.saveCurrencyChange(operationAux);
+        this.operationService.saveCurrencyChange(operationAuxClient);
 
         return "redirect:/client?id=" + user.getId();
     }

@@ -1,6 +1,6 @@
 package es.uma.proyectotaw.ui;
 
-public class OperationAux {
+public class OperationAuxClient {
 
     private Integer client;
     private Integer origin;
@@ -10,7 +10,7 @@ public class OperationAux {
     private String currentChangeDestination;
     private String payment;
 
-    public OperationAux(){
+    public OperationAuxClient(){
        this.amount = "";
        this.currentChangeDestination = "";
        this.currentChangeOrigin = "";

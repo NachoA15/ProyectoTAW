@@ -6,8 +6,8 @@ import es.uma.proyectotaw.dao.OperationRepository;
 import es.uma.proyectotaw.dao.PaymentRepository;
 import es.uma.proyectotaw.dto.client.Client_OperationDTO;
 import es.uma.proyectotaw.entity.*;
-import es.uma.proyectotaw.ui.FilterOperations;
-import es.uma.proyectotaw.ui.OperationAux;
+import es.uma.proyectotaw.ui.FilterOperationsClient;
+import es.uma.proyectotaw.ui.OperationAuxClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +29,7 @@ public class OperationService{
     protected CurrencyChangeRespository currencyChangeRespository;
 
 
-    public List<Client_OperationDTO> listOperations (FilterOperations filter, Integer idClient) throws ParseException {
+    public List<Client_OperationDTO> listOperations (FilterOperationsClient filter, Integer idClient) throws ParseException {
         AccountEntity account = this.accountRepository.getAccountByIdClient(idClient);
         List<OperationEntity> listOperations = this.operationRepository.getOperationByMyAccount(account.getId());
 
@@ -64,18 +64,18 @@ public class OperationService{
         return dtos;
     }
 
-    public void saveTransference(OperationAux operationAux){
+    public void saveTransference(OperationAuxClient operationAuxClient){
         OperationEntity operation = new OperationEntity();
-        AccountEntity accountOrigin = this.accountRepository.findById(operationAux.getOrigin()).orElse(null);
-        AccountEntity accountDestination = this.accountRepository.findById(operationAux.getDestination()).orElse(null);
+        AccountEntity accountOrigin = this.accountRepository.findById(operationAuxClient.getOrigin()).orElse(null);
+        AccountEntity accountDestination = this.accountRepository.findById(operationAuxClient.getDestination()).orElse(null);
 
         java.sql.Date fecha = new java.sql.Date(new java.util.Date().getTime());
         operation.setDate(fecha);
         operation.setAccountByOrigin(accountOrigin);
         operation.setAccountByDestination(accountDestination);
-        operation.setAmount(Double.parseDouble(operationAux.getAmount()));
+        operation.setAmount(Double.parseDouble(operationAuxClient.getAmount()));
 
-        PaymentEntity payment = this.paymentRepository.getPaymentEntityByCurrency(operationAux.getPayment());
+        PaymentEntity payment = this.paymentRepository.getPaymentEntityByCurrency(operationAuxClient.getPayment());
 
         operation.setPaymentByPayment(payment);
 
@@ -87,23 +87,23 @@ public class OperationService{
         this.accountRepository.save(accountDestination);
     }
 
-    public void saveCurrencyChange(OperationAux operationAux){
+    public void saveCurrencyChange(OperationAuxClient operationAuxClient){
         OperationEntity operation = new OperationEntity();
-        AccountEntity account = this.accountRepository.findById(operationAux.getOrigin()).orElse(null);
+        AccountEntity account = this.accountRepository.findById(operationAuxClient.getOrigin()).orElse(null);
 
         java.sql.Date fecha = new java.sql.Date(new java.util.Date().getTime());
         operation.setDate(fecha);
         operation.setAccountByOrigin(account);
         operation.setAccountByDestination(account);
-        operation.setAmount(Double.parseDouble(operationAux.getAmount()));
+        operation.setAmount(Double.parseDouble(operationAuxClient.getAmount()));
 
         CurrencyChangeEntity currencyChange = this.currencyChangeRespository.getCurrencyChangeEntitiesByOriginAndDestination(
-                operationAux.getCurrentChangeOrigin(), operationAux.getCurrentChangeDestination());
+                operationAuxClient.getCurrentChangeOrigin(), operationAuxClient.getCurrentChangeDestination());
 
         if(currencyChange == null){
             currencyChange = new CurrencyChangeEntity();
-            currencyChange.setOriginCurrency(operationAux.getCurrentChangeOrigin());
-            currencyChange.setDestinationCurrency(operationAux.getCurrentChangeDestination());
+            currencyChange.setOriginCurrency(operationAuxClient.getCurrentChangeOrigin());
+            currencyChange.setDestinationCurrency(operationAuxClient.getCurrentChangeDestination());
             this.currencyChangeRespository.save(currencyChange);
         }
 

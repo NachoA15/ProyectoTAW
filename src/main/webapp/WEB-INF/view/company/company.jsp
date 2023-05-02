@@ -1,20 +1,13 @@
-<%@ page import="es.uma.proyectotaw.entity.posiacaso.Company" %>
-<%@ page import="es.uma.proyectotaw.entity.posiacaso.Account" %>
-<%@ page import="es.uma.proyectotaw.entity.posiacaso.Person" %>
-<%@ page import="java.util.List" %><%--
-  Created by IntelliJ IDEA.
-  User: PC
-  Date: 07/04/2023
-  Time: 13:57
-  To change this template use File | Settings | File Templates.
---%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<%@ page import="es.uma.proyectotaw.entity.CompanyEntity" %>
+<%@ page import="es.uma.proyectotaw.entity.ClientEntity" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-    Company company = (Company) request.getAttribute("company");
-    List<Person> relatedPersons = (List<Person>) company.getPeopleById();
-    //Assistant
-    Person company_partner = (Person) request.getAttribute("company_partner");
-    //Person company_user = (Person) request.getAttribute("company_user");
+    CompanyEntity company = (CompanyEntity) request.getAttribute("company");
+    Boolean isCompanyUser = (Boolean) request.getAttribute("isCompanyUser");
+    List<ClientEntity> clients = (List<ClientEntity>) request.getAttribute("clients");
 %>
 <html>
 <head>
@@ -22,6 +15,15 @@
 </head>
 <body>
 <h1>Company <%=company.getName()%></h1>
+
+<c:if test="${info != null}" >
+    <p style="color:red">
+            ${info}
+    </p>
+</c:if>
+
+<a href="/logout">Log out</a>
+
 <h3>Business information</h3>
 
 <table style="border-spacing: 10px">
@@ -35,90 +37,53 @@
         <td><b>URL:</b></td> <td> <a href="<%=company.getUrl()%>"><%=company.getUrl()%></a></td>
     </tr>
     <tr>
-        <td><b>Area:</b></td> <td> <%=company.getArea().getArea()%></td>
+        <td><b>Area:</b></td> <td> <%=company.getCompanyAreaByArea().getArea()%></td>
     </tr>
 </table>
 
 <hr/>
 
-<h3>Partners and authorised people</h3>
+<h3>Clients of a company</h3>
 
-<%
-    if (relatedPersons.size() > 0) {
-%>
-<table border="1px">
-    <thead>
+<table border="1" style="border-spacing: 10px">
     <tr>
-        <td><b>Name</b></td>
-        <td><b>Surname</b></td>
-        <td><b>Email</b></td>
-        <td><b>Birth date</b></td>
-        <td><b>Role</b></td>
+        <th>Name</th>
+        <th>Surname</th>
+        <th>Birthdate</th>
+        <th>City</th>
+        <th>Country</th>
     </tr>
-    </thead>
-    <tbody>
     <%
-        for (Person p : relatedPersons) {
+        if(clients != null) {
     %>
-    <tr>
-        <td><%=p.getName()%></td>
-        <td><%=p.getSurname()%></td>
-        <td><%=p.getUserByPersonUser().getEmail()%></td>
-        <td><%=p.getBirthDate()%></td>
-        <td><%=p.getUserByPersonUser().getRoleUserByRole().getRole()%></td>
-    </tr>
+        <%
+            for (ClientEntity cl : clients) {
+        %>
+        <tr>
+            <td><%=cl.getPersonById().getName()%></td>
+            <td><%=cl.getPersonById().getSurname()%></td>
+            <td><%=cl.getPersonById().getBirthDate()%></td>
+            <td><%=cl.getAddressByAddress().getCity()%></td>
+            <td><%=cl.getAddressByAddress().getCountry()%></td>
+        </tr>
+        <%
+            }
+        %>
     <%
         }
     %>
-    </tbody>
 </table>
+
 <%
-} else {
+    if (isCompanyUser) {
 %>
-<h4 style="color: crimson">This company doesn't have any partners or authorised people registered.</h4>
+<a href="register_user">Register new company partner / authorised</a>
 <%
     }
 %>
-
-<hr/>
-
-<h3>Clients of company</h3>
-
-<table style="border-spacing: 10px">
-    <tr>
-        <td><b>Name:</b></td> <td> Client1 </td>
-    </tr>
-</table>
-
-<a href="users?id=<%=company.getId()%>">Show company users</a>
 <br/>
-<a href="operations?id=<%=company.getId()%>">Show company operations</a>
+<a href="edit_company?id=<%=company.getId()%>">Edit company</a>
 <br/>
 
-<!-- Assistant -->
-
-<%
-    if(company_partner != null){
-        if(company_partner.getChatsById().isEmpty()){
-%>
-<a href="/newChat/<%=company_partner.getId()%>">Chat with an assistant</a>
-<%
-        }else{
-%>
-<a href="/client/chat/<%=company_partner.getId()%>">Chat with an assistant</a>
-<%
-        }
-    //}else if(company_user != null){
-        //if(company_user.getChatsById().isEmpty()){
-%>
-<!--<a href="/newChat/<%//=company_user.getId()%>">Chat with an assistant</a>-->
-<%
-        //}else{
-%>
-<!--<a href="/client/chat/<%//=company_user.getId()%>">Chat with an assistant</a>-->
-<%
-        //}
-    }
-%>
 </body>
 </html>
