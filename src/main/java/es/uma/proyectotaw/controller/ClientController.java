@@ -344,7 +344,7 @@ public class ClientController {
 
         if(!accountDTO.getAccountStatusByAccountStatus().getStatus().equals("Active")){
             url = "redirect:/client?id="+ user.getId();
-            //Tendria que poner un mensaje de error
+            model.addAttribute("error", "To be able to make operations, your account must be active.");
         }else{
             OperationAuxClient operation = new OperationAuxClient();
             operation.setOrigin(accountDTO.getId());
@@ -364,16 +364,25 @@ public class ClientController {
     }
 
     @PostMapping("/transference/save")
-    public String doSaveTransference(@ModelAttribute("operation") OperationAuxClient operationAuxClient, HttpSession session){
+    public String doSaveTransference(@ModelAttribute("operation") OperationAuxClient operationAuxClient,
+                                     HttpSession session, Model model){
         UserDTO user = (UserDTO) session.getAttribute("client");
+
+        Client_AccountDTO accountDTO = this.accountService.getAccountById(operationAuxClient.getOrigin());
+        String url = "redirect:/client?id=" + user.getId();
 
         if (user == null) {
             return "redirect:/";
         }
 
-        this.operationService.saveTransference(operationAuxClient);
-
-        return "redirect:/client?id=" + user.getId();
+        if(accountDTO.getBalance() - Double.parseDouble(operationAuxClient.getAmount()) < 0){
+            model.addAttribute("error", "Nonpayment.");
+            model.addAttribute("user", user);
+            url = "client/transference";
+        }else {
+            this.operationService.saveTransference(operationAuxClient);
+        }
+        return url;
     }
 
     @GetMapping("/currencyChange")
@@ -390,6 +399,7 @@ public class ClientController {
 
         if(!accountDTO.getAccountStatusByAccountStatus().getStatus().equals("Active")){
             url = "redirect:/client?id="+ user.getId();
+            model.addAttribute("error", "To be able to make operations, your account must be active.");
         }else{
             OperationAuxClient operation = new OperationAuxClient();
             operation.setClient(accountDTO.getClientByOwner().getId());
@@ -407,16 +417,26 @@ public class ClientController {
     }
 
     @PostMapping("/currencyChange/save")
-    public String doSaveCurrencyChange(@ModelAttribute("operation") OperationAuxClient operationAuxClient, HttpSession session){
+    public String doSaveCurrencyChange(@ModelAttribute("operation") OperationAuxClient operationAuxClient,
+                                       HttpSession session, Model model){
         UserDTO user = (UserDTO) session.getAttribute("client");
+
+        Client_AccountDTO accountDTO = this.accountService.getAccountById(operationAuxClient.getOrigin());
+        String url = "redirect:/client?id=" + user.getId();
 
         if (user == null) {
             return "redirect:/";
         }
 
-        this.operationService.saveCurrencyChange(operationAuxClient);
+        if(accountDTO.getBalance() < 0){
+            model.addAttribute("error", "Nonpayment.");
+            model.addAttribute("user", user);
+            url = "client/currencyChange";
+        }else {
+            this.operationService.saveCurrencyChange(operationAuxClient);
+        }
 
-        return "redirect:/client?id=" + user.getId();
+        return url;
     }
 
     @GetMapping("/activation")

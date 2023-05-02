@@ -18,6 +18,11 @@
 <body>
 
 <h3><a href="/client?id=<%=userDTO.getId()%>">Back</a></h3>
+<c:if test="${error != null}" >
+  <p style="color:red">
+      ${error}
+  </p>
+</c:if>
 <form:form action="/currencyChange/save" method="post" modelAttribute="operation">
   <form:hidden path="client"/>
   <form:hidden path="origin"/>

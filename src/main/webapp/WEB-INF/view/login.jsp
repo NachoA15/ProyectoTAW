@@ -38,6 +38,8 @@
     <button>Login</button><br/><br/>
 
     If you don't have an account you can <a href="/signUp">sign up here</a>
+    <br/>
+    If you want to register company you <a href="/company/register">click here</a>
 </form>
 </body>
 </html>
