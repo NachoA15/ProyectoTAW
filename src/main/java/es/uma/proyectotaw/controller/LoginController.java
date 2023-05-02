@@ -8,6 +8,7 @@ import es.uma.proyectotaw.dto.UserDTO;
 import es.uma.proyectotaw.entity.CompanyEntity;
 import es.uma.proyectotaw.entity.PersonEntity;
 import es.uma.proyectotaw.entity.UserEntity;
+import es.uma.proyectotaw.service.PersonService;
 import es.uma.proyectotaw.service.UserService;
 import es.uma.proyectotaw.ui.SignUp;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,8 @@ public class LoginController {
 
     @Autowired
     protected UserService userService;
+    @Autowired
+    protected PersonService personService;
 
     @Autowired
     protected UserRepository userRepository;
@@ -51,7 +54,10 @@ public class LoginController {
         if (userDTO == null) {
             model.addAttribute("error", "Incorrect credentials. Please try again.");
             urlTo = "login";
-        } else {
+        } else if(this.personService.getPersonByUser(userDTO.getId()).getClientByPersonClient().getClientStatusByStatus().equals("Pending")){
+            model.addAttribute("error", "It must first be approved by a manager.");
+            urlTo = "login";
+        }else {
             if (userDTO.getRole().equals("management")) {
                 session.setAttribute("management", userDTO);
                 urlTo = "redirect:/clients";
@@ -102,9 +108,6 @@ public class LoginController {
         return "signUp";
     }
 
-    /**
-     * @author: Marina Sayago
-     */
     @PostMapping("/signUpSave")
     public String doSaveSignUp(@ModelAttribute("signUp") SignUp signUp, Model model) throws ParseException {
         String urlTo = "login";
@@ -114,7 +117,11 @@ public class LoginController {
             urlTo = "signUp";
         }else if(signUp.getSurname().equals("") || signUp.getPassword().equals("") ||
                 signUp.getBirthDay().equals("")|| signUp.getEmail().equals("") ||
-                signUp.getName().equals("") || signUp.getConfirmPassword().equals("")){
+                signUp.getName().equals("") || signUp.getConfirmPassword().equals("") ||
+                signUp.getCity().equals("") || signUp.getCountry().equals("") ||
+                signUp.getNumber().equals("") || signUp.getPhone().equals("") ||
+                signUp.getRegion().equals("") || signUp.getStreet().equals("") ||
+                signUp.getZipCode().equals("")){
             model.addAttribute("error", "Complete all the fields. Please try again.");
             urlTo = "signUp";
         }else{
