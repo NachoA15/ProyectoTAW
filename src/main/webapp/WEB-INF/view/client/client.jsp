@@ -89,6 +89,12 @@
 
 <h2>My operations</h2>
 
+<c:if test="${error != null}" >
+    <p style="color:red">
+            ${error}
+    </p>
+</c:if>
+
 <h3><a href="/seeOperations?id=<%=client.getClientByPersonClient().getId()%>"> See all my operations</a> </h3>
 
 <h3><a href="/transference?id=<%=client.getClientByPersonClient().getId()%>"> Make a transference</a> </h3>

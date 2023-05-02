@@ -18,7 +18,7 @@
 <body>
 <h1>MY PROFILE</h1>
 <h3><a href="/client?id=<%=userDTO.getId()%>">Back</a></h3>
-    <form:form action="/saveProfile" method="post" modelAttribute="profileAuxClient">
+    <form:form action="/saveProfile" method="post" modelAttribute="profileAux">
         <form:hidden path="idClient"/>
         Name: <form:input path="name"/><br/>
         Surname: <form:input path="surname"/><br/>

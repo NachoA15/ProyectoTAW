@@ -29,7 +29,7 @@ public class OperationService{
     protected CurrencyChangeRespository currencyChangeRespository;
 
 
-    public List<Client_OperationDTO> listOperations (FilterOperationsClient filter, Integer idClient) throws ParseException {
+    public List<Client_OperationDTO> listOperations (FilterOperationsClient filter, Integer idClient){
         AccountEntity account = this.accountRepository.getAccountByIdClient(idClient);
         List<OperationEntity> listOperations = this.operationRepository.getOperationByMyAccount(account.getId());
 
