@@ -39,6 +39,27 @@
     <tr>
         <td><b>Area:</b></td> <td> <%=company.getCompanyAreaByArea().getArea()%></td>
     </tr>
+    <tr>
+        <td><b>Email:</b></td> <td> <%=company.getUserByCompanyUser().getEmail()%></td>
+    </tr>
+    <tr>
+        <td><b>Phone:</b></td> <td> <%=company.getClientByCompanyClient().getPhone()%></td>
+    </tr>
+    <tr>
+        <td><b>Country:</b></td> <td> <%=company.getClientByCompanyClient().getAddressByAddress().getCountry()%></td>
+    </tr>
+    <tr>
+        <td><b>Street:</b></td> <td> <%=company.getClientByCompanyClient().getAddressByAddress().getStreet()%></td>
+    </tr>
+    <tr>
+        <td><b>Street number:</b></td> <td> <%=company.getClientByCompanyClient().getAddressByAddress().getNumber()%></td>
+    </tr>
+    <tr>
+        <td><b>City:</b></td> <td> <%=company.getClientByCompanyClient().getAddressByAddress().getCity()%></td>
+    </tr>
+    <tr>
+        <td><b>Country:</b></td> <td> <%=company.getClientByCompanyClient().getAddressByAddress().getCountry()%></td>
+    </tr>
 </table>
 
 <hr/>

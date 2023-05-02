@@ -50,14 +50,17 @@ public class LoginController {
                                  Model model, HttpSession session) {
         String urlTo = "redirect:/";
         UserDTO userDTO = this.userService.authenticate(email, password);
+        PersonEntity person = this.personRepository.getPersonByPersonUser(userDTO.getId());
 
         if (userDTO == null) {
             model.addAttribute("error", "Incorrect credentials. Please try again.");
             urlTo = "login";
-        } else if(this.personService.getPersonByUser(userDTO.getId()).getClientByPersonClient().getClientStatusByStatus().equals("Pending")){
+        } else if((person == null && this.companyRepository.getCompanyByCompanyUser(userDTO.getId()).getClientByCompanyClient().getClientStatusByStatus().equals("Pending"))
+                || (person != null && this.personService.getPersonByUser(userDTO.getId()).getClientByPersonClient().getClientStatusByStatus().equals("Pending"))){
             model.addAttribute("error", "It must first be approved by a manager.");
             urlTo = "login";
-        }else {
+        }
+        else {
             if (userDTO.getRole().equals("management")) {
                 session.setAttribute("management", userDTO);
                 urlTo = "redirect:/clients";
