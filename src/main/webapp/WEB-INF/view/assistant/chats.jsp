@@ -13,6 +13,7 @@
      * @author: Iván Delgado
      */
 %>
+
 <%
     List<AssistantChatDTO> chats = (List<AssistantChatDTO>) request.getAttribute("chats");
 %>
@@ -76,5 +77,6 @@
             }
         %>
     </table>
+    <a href="/logout">Logout</a>
 </body>
 </html>

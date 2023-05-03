@@ -115,5 +115,9 @@
 <%
     }
 %>
+
+<!-- ASSISTANT: Ivan Delgado -->
+<br/>
+<a href="/client/chat/<%=company_person.getId()%>">Chat with assistant</a>
 </body>
 </html>

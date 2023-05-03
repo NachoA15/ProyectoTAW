@@ -6,6 +6,7 @@ import es.uma.proyectotaw.dto.UserDTO;
 import es.uma.proyectotaw.entity.UserEntity;
 import es.uma.proyectotaw.service.ChatService;
 import es.uma.proyectotaw.ui.FilterChats;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -78,6 +79,28 @@ public class AsistantController {
         return urlTo;
     }
 
+    @GetMapping("/returnChat")
+    public String returnFromChat(HttpSession session){
+        String urlTo = "login";
+        UserDTO user = (UserDTO) session.getAttribute("assistant");
+        if(user != null){
+            urlTo = "redirect:/assistant";
+        }else{
+            user = (UserDTO) session.getAttribute("client");
+
+            if(user != null){
+                urlTo = "redirect:/client?id=" + user.getId();
+            }else{
+                user = ((UserEntity) session.getAttribute("company_person")).toDTO();
+                if(user != null){
+                    urlTo = "redirect:/company/company_person?id=" + user.getId();
+                }
+            }
+        }
+
+        return urlTo;
+    }
+
     @GetMapping("/assistant/close/{id}")
     public String closeChat(@PathVariable("id") Integer idChat){
         this.chatService.closeChat(idChat);
@@ -87,8 +110,14 @@ public class AsistantController {
     @GetMapping("/assistant/newMessage/{id}")
     public String newMessage(@PathVariable("id") Integer idChat, Model model, HttpSession session){
         UserDTO user = (UserDTO) session.getAttribute("assistant");
+        //The user isn't an assistant
         if(user == null){
             user = (UserDTO) session.getAttribute("client");
+        //The user isn't a particular client
+        }
+        if(user == null){
+            //The company part uses entities instead of dtos so this casting is necessary
+            user = ((UserEntity) session.getAttribute("company_person")).toDTO();
         }
         AssistantMessageDTO newMessage = this.chatService.newMessage(idChat, user);
         model.addAttribute("newMessage", newMessage);
@@ -100,6 +129,10 @@ public class AsistantController {
         UserDTO user = (UserDTO) session.getAttribute("assistant");
         if(user == null){
             user = (UserDTO) session.getAttribute("client");
+        }
+        if(user == null){
+            //The company part uses entities instead of dtos so this casting is necessary
+            user = ((UserEntity) session.getAttribute("company_person")).toDTO();
         }
         this.chatService.saveNewMessage(assistantMessageDTO, user);
         String urlTo = "redirect:/assistant/messages/" + assistantMessageDTO.getChat() + "";
