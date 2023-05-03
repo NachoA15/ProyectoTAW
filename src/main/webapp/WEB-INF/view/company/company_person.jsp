@@ -50,7 +50,9 @@
         <td><%=company_person.getClientByPersonClient().getAddressByAddress().getCountry()%></td>
     </tr>
 </table>
-
+<%
+    if(account != null){
+%>
 <h2>Account</h2>
 <table border="1">
     <tr>
@@ -88,7 +90,9 @@
 
     </tr>
 </table>
-
+<%
+    }
+%>
 <br/>
 <a href="company?id=<%=company_person.getCompanyByRelatedCompany().getId()%>">Go to company</a>
 <br/>

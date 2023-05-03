@@ -56,7 +56,7 @@ public class LoginController {
             model.addAttribute("error", "Incorrect credentials. Please try again.");
             urlTo = "login";
         } else if((person == null && this.companyRepository.getCompanyByCompanyUser(userDTO.getId()) != null && this.companyRepository.getCompanyByCompanyUser(userDTO.getId()).getClientByCompanyClient().getClientStatusByStatus().equals("Pending"))
-                || (person != null && person.getClientByPersonClient() != null && this.personService.getPersonByUser(userDTO.getId()).getClientByPersonClient().getClientStatusByStatus().equals("Pending"))){
+                || (person != null && this.personService.getPersonByUser(userDTO.getId()).getClientByPersonClient().getClientStatusByStatus().equals("Pending"))){
             model.addAttribute("error", "It must first be approved by a manager.");
             urlTo = "login";
         }
