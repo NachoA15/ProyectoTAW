@@ -5,9 +5,12 @@ import es.uma.proyectotaw.dao.CompanyRepository;
 import es.uma.proyectotaw.dao.PersonRepository;
 import es.uma.proyectotaw.dao.UserRepository;
 import es.uma.proyectotaw.dto.UserDTO;
+import es.uma.proyectotaw.dto.client.Client_ClientDTO;
+import es.uma.proyectotaw.dto.client.Client_PersonDTO;
 import es.uma.proyectotaw.entity.CompanyEntity;
 import es.uma.proyectotaw.entity.PersonEntity;
 import es.uma.proyectotaw.entity.UserEntity;
+import es.uma.proyectotaw.service.ClientService;
 import es.uma.proyectotaw.service.PersonService;
 import es.uma.proyectotaw.service.UserService;
 import es.uma.proyectotaw.ui.SignUp;
@@ -55,8 +58,14 @@ public class LoginController {
         if (userDTO == null) {
             model.addAttribute("error", "Incorrect credentials. Please try again.");
             urlTo = "login";
+
         } else if((person == null && this.companyRepository.getCompanyByCompanyUser(userDTO.getId()) != null && this.companyRepository.getCompanyByCompanyUser(userDTO.getId()).getClientByCompanyClient().getClientStatusByStatus().equals("Pending"))
                 || (person != null && this.personService.getPersonByUser(userDTO.getId()).getClientByPersonClient().getClientStatusByStatus().equals("Pending"))){
+
+
+        } else if((person == null && this.companyRepository.getCompanyByCompanyUser(userDTO.getId()) != null &&
+                this.companyRepository.getCompanyByCompanyUser(userDTO.getId()).getClientByCompanyClient().getClientStatusByStatus().equals("Pending"))){
+
             model.addAttribute("error", "It must first be approved by a manager.");
             urlTo = "login";
         }
@@ -65,8 +74,15 @@ public class LoginController {
                 session.setAttribute("management", userDTO);
                 urlTo = "redirect:/clients";
             }else if(userDTO.getRole().equals("client")){
-                session.setAttribute("client", userDTO);
-                urlTo = "redirect:/client?id=" + userDTO.getId();
+                Client_PersonDTO personDTO = this.personService.getPersonByUser(userDTO.getId());
+                if(personDTO.getClientByPersonClient().getClientStatusByStatus().equals("Pending")){
+                    model.addAttribute("error", "Management");
+                    urlTo = "login";
+                }else{
+                    session.setAttribute("client", userDTO);
+                    urlTo = "redirect:/client?id=" + userDTO.getId();
+                }
+
             }else if(userDTO.getRole().equals("assistant")){
                 session.setAttribute("assistant", userDTO);
                 urlTo ="redirect:/assistant";
