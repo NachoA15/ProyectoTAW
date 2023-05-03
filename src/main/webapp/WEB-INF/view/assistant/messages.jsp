@@ -51,6 +51,6 @@
         }
     %>
 
-    <p><a href="/assistant">Return</a></p>
+    <p><a href="/returnChat">Return</a></p>
 </body>
 </html>

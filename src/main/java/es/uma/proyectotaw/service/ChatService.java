@@ -133,10 +133,15 @@ public class ChatService {
         return chat.toDTO();
     }
 
-    public AssistantChatDTO getClientChat(Integer idClient){
-        PersonEntity person = this.personRepository.findById(idClient).orElse(null);
+    public AssistantChatDTO getClientChat(Integer idPerson){
+        PersonEntity person = this.personRepository.findById(idPerson).orElse(null);
         ChatEntity chat = this.chatRepository.getClientChat(person.getId());
-        return chat.toDTO();
+        if(chat == null){
+            return null;
+        }else{
+            return chat.toDTO();
+        }
+
     }
 
     /*

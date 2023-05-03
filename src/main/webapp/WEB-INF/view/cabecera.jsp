@@ -19,7 +19,7 @@
     <td>User ID: ${pageContext.session.id}</td>
   </tr>
   <tr>
-    <td>Bienvenido, ${user.email} </td>
+    <td>Welcome, ${user.email} </td>
   </tr>
   <tr>
     <td><a href="/logout">Log out</a></td>
