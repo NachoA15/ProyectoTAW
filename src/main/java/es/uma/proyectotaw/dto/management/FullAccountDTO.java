@@ -5,6 +5,7 @@ import java.sql.Date;
 /**
  * @author Ignacio Alba
  */
+
 public class FullAccountDTO {
     private int id;
     private String iban;

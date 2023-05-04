@@ -4,6 +4,9 @@ import es.uma.proyectotaw.dto.AddressDTO;
 
 import java.io.Serializable;
 
+/**
+ * @author: Marina Sayago
+ */
 public class Client_ClientDTO implements Serializable {
 
     private int id;

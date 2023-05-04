@@ -10,19 +10,20 @@ import java.util.List;
 public interface AccountRepository extends JpaRepository<AccountEntity, Integer> {
 
     /**
-     * @author: Marina Sayago
+     * @author: Marina Sayago - Cliente
      */
-
     @Query("select a from AccountEntity a where a.clientByOwner.id = :idClient")
     public AccountEntity getAccountByIdClient(@Param("idClient") Integer idClient);
 
+    /**
+     * @author: Marina Sayago - Cliente
+     */
     @Query("select a from AccountEntity a where not a.clientByOwner.id = :idClient")
     public List<AccountEntity> getAccountWithoutMe(@Param("idClient")Integer idClient);
 
     /**
-     * @author: Martin Pur
+     * @author: Martin Pur - Empresa
      */
-
     @Query("select a from AccountEntity a where a.clientByOwner.personById.companyByRelatedCompany.id = :idCompany")
     public List<AccountEntity> getAccountsByCompany(@Param("idCompany") Integer idCompany);
 }

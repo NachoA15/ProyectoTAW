@@ -9,16 +9,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import java.util.List;
 
 /**
- * @author: Marina Sayago
+ * @author: Marina Sayago - Cliente
  */
 public interface RoleUserRepository extends JpaRepository<RoleUserEntity, Integer> {
     @Query("select r from RoleUserEntity r where r.role = :role")
     public RoleUserEntity getRoleUserByRole(@Param("role") String role);
 
     /**
-     * @author: Martin Pur
+     * @author: Martin Pur - Empresa
      */
-
     @Query("select ru from RoleUserEntity ru where ru.id = 4 or ru.id = 5")
     public List<RoleUserEntity> getCompanyRoles();
 }

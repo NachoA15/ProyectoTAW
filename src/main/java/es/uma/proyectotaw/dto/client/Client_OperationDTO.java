@@ -4,6 +4,9 @@ package es.uma.proyectotaw.dto.client;
 import java.io.Serializable;
 import java.sql.Date;
 
+/**
+ * @author: Marina Sayago
+ */
 public class Client_OperationDTO implements Serializable {
     private int id;
     private Client_AccountDTO accountOriginByOperation;

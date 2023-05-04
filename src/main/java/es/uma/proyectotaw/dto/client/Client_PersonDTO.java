@@ -5,6 +5,9 @@ import es.uma.proyectotaw.dto.UserDTO;
 import java.io.Serializable;
 import java.sql.Date;
 
+/**
+ * @author: Marina Sayago
+ */
 public class Client_PersonDTO implements Serializable {
     private int id;
     private String name;

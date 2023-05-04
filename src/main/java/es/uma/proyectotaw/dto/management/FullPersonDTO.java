@@ -3,7 +3,7 @@ package es.uma.proyectotaw.dto.management;
 import java.sql.Date;
 
 /**
- * @author: Nacho Alba
+ * @author: Ignacio Alba
  */
 public class FullPersonDTO {
     private int id;

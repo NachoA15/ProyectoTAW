@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.util.Collection;
 import java.util.Objects;
 
+
 @Entity
 @Table(name = "payment", schema = "taw24", catalog = "")
 public class PaymentEntity {

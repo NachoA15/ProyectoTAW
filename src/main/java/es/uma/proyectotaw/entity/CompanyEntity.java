@@ -10,6 +10,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Al final del archivo están los métodos necesarios para convertir un objeto de esta clase a
+ * su DTO correspondiente.
+ *
+ * Cada método está etiquetado con el nombre del autor/a.
+ */
 @Entity
 @Table(name = "company", schema = "taw24", catalog = "")
 public class CompanyEntity {
@@ -115,6 +121,9 @@ public class CompanyEntity {
         this.peopleById = peopleById;
     }
 
+    /**
+     * @author: Ignacio Alba
+     */
     public PartialCompanyDTO toPartialDTO() {
         PartialCompanyDTO dto = new PartialCompanyDTO();
         dto.setId(this.id);
@@ -126,12 +135,18 @@ public class CompanyEntity {
         return dto;
     }
 
+    /**
+     * @author: Ignacio Alba
+     */
     private List<FullPersonDTO> relatedPersonListToDTO(List<PersonEntity> list) {
         List<FullPersonDTO> relatedPersonsDTO = new ArrayList<>();
         list.forEach((final PersonEntity p) -> relatedPersonsDTO.add(p.toDTO()));
         return relatedPersonsDTO;
     }
 
+    /**
+     * @author: Ignacio Alba
+     */
     public FullCompanyDTO toDTO() {
         FullCompanyDTO dto = new FullCompanyDTO();
         dto.setClient(this.clientByCompanyClient.toFullDTO());

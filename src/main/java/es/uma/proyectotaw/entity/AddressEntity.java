@@ -6,6 +6,12 @@ import javax.persistence.*;
 import java.util.Collection;
 import java.util.Objects;
 
+/**
+ * Al final del archivo están los métodos necesarios para convertir un objeto de esta clase a
+ * su DTO correspondiente.
+ *
+ * Cada método está etiquetado con el nombre del autor/a.
+ */
 @Entity
 @Table(name = "address", schema = "taw24", catalog = "")
 public class AddressEntity {
@@ -111,6 +117,9 @@ public class AddressEntity {
         this.clientsById = clientsById;
     }
 
+    /**
+     * @author: Ignacio Alba
+     */
     public AddressDTO toDTO() {
         AddressDTO dto = new AddressDTO();
         dto.setId(this.id);

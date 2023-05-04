@@ -7,6 +7,12 @@ import es.uma.proyectotaw.dto.management.PartialClientDTO;
 import javax.persistence.*;
 import java.util.Objects;
 
+/**
+ * Al final del archivo están los métodos necesarios para convertir un objeto de esta clase a
+ * su DTO correspondiente.
+ *
+ * Cada método está etiquetado con el nombre del autor/a.
+ */
 @Entity
 @Table(name = "client", schema = "taw24", catalog = "")
 public class ClientEntity {
@@ -118,6 +124,9 @@ public class ClientEntity {
         this.personById = personById;
     }
 
+    /**
+     * @author: Ignacio Alba
+     */
     public PartialClientDTO toPartialDTO() {
         PartialClientDTO dto = new PartialClientDTO();
         dto.setId(this.id);
@@ -132,6 +141,9 @@ public class ClientEntity {
         return dto;
     }
 
+    /**
+     * @author: Ignacio Alba
+     */
     public FullClientDTO toFullDTO() {
         FullClientDTO dto = new FullClientDTO();
         dto.setId(this.id);
@@ -145,6 +157,9 @@ public class ClientEntity {
         return dto;
     }
 
+    /**
+     * @author: Marina Sayago
+     */
     public Client_ClientDTO toClientDTO(){
         Client_ClientDTO dto = new Client_ClientDTO();
 
