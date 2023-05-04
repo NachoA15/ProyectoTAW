@@ -40,7 +40,7 @@ public class ClientController {
     protected PersonService personService;
 
     @Autowired
-    protected  CompanyService companyService;
+    protected CompanyService companyService;
 
     @Autowired
     protected ClientService clientService;
@@ -111,7 +111,7 @@ public class ClientController {
 
     @GetMapping("/clients/view/{id}")
     public String doViewClient(@PathVariable("id") Integer clientId, Model model, HttpSession session) {
-        UserEntity user = (UserEntity) session.getAttribute("management");
+        UserDTO user = (UserDTO) session.getAttribute("management");
 
         if (user == null) {
             return "redirect:/";
@@ -126,7 +126,7 @@ public class ClientController {
    @GetMapping("/clients/view/person/{id}")
     public String doViewClientPerson(@PathVariable("id") Integer personId,
                                     Model model, HttpSession session) {
-        UserEntity user = (UserEntity) session.getAttribute("management");
+        UserDTO user = (UserDTO) session.getAttribute("management");
 
         if (user == null) {
             return "redirect:/";
@@ -142,7 +142,7 @@ public class ClientController {
     public String doViewClientCompany(@PathVariable("id") Integer companyId,
                                       Model model, HttpSession session) {
 
-        UserEntity user = (UserEntity) session.getAttribute("management");
+        UserDTO user = (UserDTO) session.getAttribute("management");
 
         if (user == null) {
             return "redirect:/";
@@ -155,7 +155,7 @@ public class ClientController {
 
     @GetMapping("/clients/view/operations/{id}")
     public String doShowOperations(@PathVariable("id") Integer clientId, Model model, HttpSession session) {
-        UserEntity user = (UserEntity) session.getAttribute("management");
+        UserDTO user = (UserDTO) session.getAttribute("management");
 
         if (user == null) {
             return "redirect:/";
@@ -169,7 +169,7 @@ public class ClientController {
 
     @GetMapping("/clients/pending")
     public String doShowPendingClients(Model model, HttpSession session) {
-        UserEntity user = (UserEntity) session.getAttribute("management");
+        UserDTO user = (UserDTO) session.getAttribute("management");
 
         if (user == null) {
             return "redirect:/";
@@ -187,7 +187,7 @@ public class ClientController {
     @GetMapping("clients/confirm/{id}")
     public String doConfirmRegistration(@PathVariable("id") Integer clientId,
                                         HttpSession session) {
-        UserEntity user = (UserEntity) session.getAttribute("management");
+        UserDTO user = (UserDTO) session.getAttribute("management");
 
         if (user == null) {
             return "redirect:/";
@@ -201,7 +201,7 @@ public class ClientController {
     @GetMapping("/clients/delete/{id}")
     public String doDenyRegistration(@PathVariable("id") Integer clientId,
                                      HttpSession session) {
-        UserEntity user = (UserEntity) session.getAttribute("management");
+        UserDTO user = (UserDTO) session.getAttribute("management");
 
         if (user == null) {
             return "redirect:/";
