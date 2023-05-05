@@ -1,7 +1,8 @@
 <%@ page import="java.util.List" %>
 <%@ page import="es.uma.proyectotaw.dto.assistant.AssistantMessageDTO" %>
 <%@ page import="es.uma.proyectotaw.dto.assistant.AssistantChatDTO" %>
-<%@ page import="es.uma.proyectotaw.dto.assistant.AssistantMessageDTO" %><%--
+<%@ page import="es.uma.proyectotaw.dto.assistant.AssistantMessageDTO" %>
+<%@ page import="es.uma.proyectotaw.dto.UserDTO" %><%--
   Created by IntelliJ IDEA.
   User: Usuario
   Date: 22/04/2023
@@ -17,6 +18,7 @@
 <%
   List<AssistantMessageDTO> messages = (List<AssistantMessageDTO>) request.getAttribute("messages");
   AssistantChatDTO chat = (AssistantChatDTO) request.getAttribute("chat");
+  UserDTO user = (UserDTO) request.getAttribute("user");
 %>
 
 <html>
@@ -48,8 +50,17 @@
     %>
     <p><a href="/assistant/newMessage/<%=chat.getId()%>">New message</a></p>
     <%
+        if(user == null){
+    %>
+    <a href="/assistant/close/<%= chat.getId() %>">Close conversation</a>
+    <%
         }
     %>
+    <%
+        }
+    %>
+
+
 
     <p><a href="/returnChat">Return</a></p>
 </body>

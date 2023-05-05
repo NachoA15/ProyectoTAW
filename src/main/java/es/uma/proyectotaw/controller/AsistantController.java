@@ -39,11 +39,13 @@ public class AsistantController {
     }
 
     @GetMapping("/assistant/messages/{id}")
-    public String doListMessages(@PathVariable("id") Integer idChat, Model model){
+    public String doListMessages(@PathVariable("id") Integer idChat, Model model, HttpSession session){
         List<AssistantMessageDTO> messages = this.chatService.getMessages(idChat);
         AssistantChatDTO assistantChatDTO = this.chatService.getChat(idChat);
         model.addAttribute("messages", messages);
         model.addAttribute("chat", assistantChatDTO);
+        UserDTO user = (UserDTO) session.getAttribute("assistant");
+        model.addAttribute("user", user);
         return "assistant/messages";
     }
 
@@ -102,9 +104,9 @@ public class AsistantController {
     }
 
     @GetMapping("/assistant/close/{id}")
-    public String closeChat(@PathVariable("id") Integer idChat){
+    public String closeChat(@PathVariable("id") Integer idChat, HttpSession session){
         this.chatService.closeChat(idChat);
-        return "redirect:/assistant/";
+        return returnFromChat(session);
     }
 
     @GetMapping("/assistant/newMessage/{id}")
@@ -150,12 +152,14 @@ public class AsistantController {
     @GetMapping("/client/chat/{id}")
     public String getClientChat(@PathVariable("id") Integer idPerson, Model model, HttpSession session){
         AssistantChatDTO chat = this.chatService.getClientChat(idPerson);
-        if(chat == null){
+        if(chat == null || chat.getState().equals("closed")){
             return createNewChat(idPerson, model, session);
         }else{
             model.addAttribute("chat", chat);
             List<AssistantMessageDTO> messages = this.chatService.getMessages(chat.getId());
             model.addAttribute("messages", messages);
+            UserDTO user = (UserDTO) session.getAttribute("assistant");
+            model.addAttribute("user", user);
             return "assistant/messages";
         }
 

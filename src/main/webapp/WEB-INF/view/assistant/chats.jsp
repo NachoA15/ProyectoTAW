@@ -33,14 +33,14 @@
         <form:radiobutton path="status" value="open"/> Open
         <form:radiobutton path="status" value="closed"/> Closed
         <form:radiobutton path="status" value=""/> Both</p>
-        <p><form:button>Submit</form:button></p> <br/>
+        <p><form:button>Filter</form:button></p>
     </form:form>
 
     <table border="1">
         <tr>
             <th>CLIENT</th>
             <th>TYPE OF ACCOUNT</th>
-            <th></th>
+            <th>STATUS</th>
             <th></th>
         </tr>
         <%
@@ -59,11 +59,10 @@
             <%
                 }
             %>
-            <td><a href="/assistant/messages/<%=chat.getId()%>"> Messages</a></td>
             <%
                 if(chat.getState().equals("open")){
             %>
-            <td><a href="/assistant/close/<%= chat.getId() %>"> Close conversation</a></td>
+            <td>Open chat</td>
             <%
                 }else{
             %>
@@ -71,6 +70,7 @@
             <%
                 }
             %>
+            <td><a href="/assistant/messages/<%=chat.getId()%>"> Messages</a></td>
         </tr>
 
         <%
