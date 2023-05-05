@@ -42,6 +42,12 @@ public class ClientService {
     @Autowired
     protected CompanyRepository companyRepository;
 
+    /*
+    =================================================================================================
+        GESTOR  -- Autor: Ignacio Alba
+    =================================================================================================
+    */
+
     public FullClientDTO getClientById(Integer id) {
         ClientEntity client = this.clientRepository.findById(id).orElse(null);
         return client.toFullDTO();
@@ -99,6 +105,12 @@ public class ClientService {
         }
         return IBAN;
     }
+
+    /*
+    =================================================================================================
+        FIN GESTOR  -- Autor: Ignacio Alba
+    =================================================================================================
+    */
 
     public Client_ClientDTO getClient(Integer idClient){
         ClientEntity client = this.clientRepository.findById(idClient).orElse(null);

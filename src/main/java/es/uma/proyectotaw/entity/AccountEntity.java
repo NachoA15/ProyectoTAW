@@ -11,6 +11,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 
+/**
+ * Al final del archivo están los métodos necesarios para convertir un objeto de esta clase a
+ * su DTO correspondiente.
+ *
+ * Cada método está etiquetado con el nombre del autor/a.
+ */
+
 @Entity
 @Table(name = "account", schema = "taw24", catalog = "")
 public class AccountEntity {
@@ -126,6 +133,9 @@ public class AccountEntity {
         this.operationsById_0 = operationsById_0;
     }
 
+    /**
+     * @author: Ignacio Alba
+     */
     public PartialAccountDTO toPartialDTO() {
         PartialAccountDTO dto = new PartialAccountDTO();
         dto.setIban(this.iban);
@@ -133,6 +143,9 @@ public class AccountEntity {
         return dto;
     }
 
+    /**
+     * @author: Ignacio Alba
+     */
     public FullAccountDTO toFullDTO() {
         FullAccountDTO dto = new FullAccountDTO();
         dto.setId(this.id);
@@ -144,6 +157,9 @@ public class AccountEntity {
         return dto;
     }
 
+    /**
+     * @author: Marina Sayago
+     */
     public Client_AccountDTO clientToAccountDTO(){
         Client_AccountDTO dto = new Client_AccountDTO();
 
@@ -158,6 +174,9 @@ public class AccountEntity {
         return dto;
     }
 
+    /**
+     * @author: Marina Sayago
+     */
     protected Collection<Client_OperationDTO> listaEntidadesADTO (Collection<OperationEntity> lista) {
         ArrayList dtos = new ArrayList<Client_OperationDTO>();
 

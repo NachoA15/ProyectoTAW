@@ -7,6 +7,12 @@ import javax.persistence.*;
 import java.sql.Date;
 import java.util.Objects;
 
+/**
+ * Al final del archivo están los métodos necesarios para convertir un objeto de esta clase a
+ * su DTO correspondiente.
+ *
+ * Cada método está etiquetado con el nombre del autor/a.
+ */
 @Entity
 @Table(name = "operation", schema = "taw24", catalog = "")
 public class OperationEntity {
@@ -102,6 +108,9 @@ public class OperationEntity {
         this.paymentByPayment = paymentByPayment;
     }
 
+    /**
+     * @author: Ignacio Alba
+     */
     public OperationDTO ManagementToDTO() {
         OperationDTO dto = new OperationDTO();
         dto.setId(this.id);
@@ -112,6 +121,10 @@ public class OperationEntity {
         dto.setCurrency(this.paymentByPayment.getCurrency());
         return dto;
     }
+
+    /**
+     * @author: Marina Sayago
+     */
     public Client_OperationDTO ClientToOperationDTO() {
         Client_OperationDTO operationDTO = new Client_OperationDTO();
 

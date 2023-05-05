@@ -9,6 +9,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Al final del archivo están los métodos necesarios para convertir un objeto de esta clase a
+ * su DTO correspondiente.
+ *
+ * Cada método está etiquetado con el nombre del autor/a.
+ */
+
 @Entity
 @Table(name = "chat", schema = "taw24", catalog = "")
 public class ChatEntity {
@@ -81,6 +88,9 @@ public class ChatEntity {
         this.messagesById = messagesById;
     }
 
+    /**
+     * @author: Iván Delgado
+     */
     public AssistantChatDTO toDTO(){
         AssistantChatDTO dto = new AssistantChatDTO();
         dto.setId(getId());

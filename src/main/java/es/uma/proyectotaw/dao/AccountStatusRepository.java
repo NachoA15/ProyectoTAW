@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 public interface AccountStatusRepository extends JpaRepository<AccountStatusEntity, Integer> {
 
     /**
-     * @author: Ignacio Alba
+     * @author: Ignacio Alba - Gestor
      */
     @Query("select a from AccountStatusEntity a where a.state = :state")
     public AccountStatusEntity findByState(@Param("state") String state);

@@ -10,6 +10,12 @@ import java.sql.Date;
 import java.util.Collection;
 import java.util.Objects;
 
+/**
+ * Al final del archivo están los métodos necesarios para convertir un objeto de esta clase a
+ * su DTO correspondiente.
+ *
+ * Cada método está etiquetado con el nombre del autor/a.
+ */
 @Entity
 @Table(name = "person", schema = "taw24", catalog = "")
 public class PersonEntity {
@@ -77,7 +83,6 @@ public class PersonEntity {
         PersonEntity that = (PersonEntity) o;
         return id == that.id && Objects.equals(name, that.name) && Objects.equals(surname, that.surname) && Objects.equals(birthDate, that.birthDate);
     }
-
     @Override
     public int hashCode() {
         return Objects.hash(id, name, surname, birthDate);
@@ -115,6 +120,9 @@ public class PersonEntity {
         this.userByPersonUser = userByPersonUser;
     }
 
+    /**
+     * @author: Ignacio Alba
+     */
     public PartialPersonDTO toPartialDTO() {
         PartialPersonDTO dto = new PartialPersonDTO();
         dto.setId(this.id);
@@ -124,10 +132,10 @@ public class PersonEntity {
         dto.setClient(this.clientByPersonClient.toPartialDTO());
         return dto;
     }
+
     /**
      * @author Ignacio Alba
      */
-
     public FullPersonDTO toDTO() {
         FullPersonDTO dto = new FullPersonDTO();
         if (this.clientByPersonClient != null) {
@@ -141,6 +149,9 @@ public class PersonEntity {
         return dto;
     }
 
+    /**
+     * @author: Iván Delgado
+     */
     public AssistantPersonDTO toAssistantPersonDTO(){
         AssistantPersonDTO dto = new AssistantPersonDTO();
         dto.setId(getId());

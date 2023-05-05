@@ -6,6 +6,12 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Objects;
 
+/**
+ * Al final del archivo están los métodos necesarios para convertir un objeto de esta clase a
+ * su DTO correspondiente.
+ *
+ * Cada método está etiquetado con el nombre del autor/a.
+ */
 @Entity
 @Table(name = "message", schema = "taw24", catalog = "")
 public class MessageEntity {
@@ -79,6 +85,9 @@ public class MessageEntity {
         this.userByWriter = userByWriter;
     }
 
+    /**
+     * @author: Iván Delgado
+     */
     public AssistantMessageDTO toDTO(){
         AssistantMessageDTO dto = new AssistantMessageDTO();
         dto.setId(getId());

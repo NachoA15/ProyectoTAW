@@ -1,7 +1,7 @@
 package es.uma.proyectotaw.dto.management;
 
 /**
- * @author: Nacho Alba
+ * @author: Ignacio Alba
  */
 public class PartialPersonDTO {
     private int id;

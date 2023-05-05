@@ -7,17 +7,9 @@ import org.springframework.data.repository.query.Param;
 
 public interface ChatStateRepository extends JpaRepository<ChatStateEntity, Integer> {
 
-    /*
-    =================================================================================================
-        ASISTENTE  -- Autor: Iván Delgado
-    =================================================================================================
-    */
+    /**
+     * @author: Iván Delgado - Asistente
+     */
     @Query("select c from ChatStateEntity c where c.state = :state")
     public ChatStateEntity getChatState(@Param("state") String state);
-
-    /*
-    =================================================================================================
-        FIN ASISTENTE  -- Autor: Iván Delgado
-    =================================================================================================
-     */
 }
