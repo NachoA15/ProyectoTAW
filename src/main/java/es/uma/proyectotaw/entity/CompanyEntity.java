@@ -35,7 +35,7 @@ public class CompanyEntity {
     @ManyToOne
     @JoinColumn(name = "area", referencedColumnName = "id", nullable = false)
     private CompanyAreaEntity area;
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "company_user", referencedColumnName = "id", nullable = false)
     private UserEntity userByCompanyUser;
     @OneToOne

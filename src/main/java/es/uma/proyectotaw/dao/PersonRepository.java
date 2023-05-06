@@ -30,6 +30,12 @@ public interface PersonRepository extends JpaRepository<PersonEntity, Integer> {
     /**
      * @author Ignacio Alba
      */
+    @Query("select p from PersonEntity p")
+    public List<PersonEntity> getInactivePersons();
+
+    /**
+     * @author Ignacio Alba
+     */
     @Query("select p from PersonEntity p where p.clientByPersonClient.clientStatusByStatus.status in :clientStatuses" +
             " and p.clientByPersonClient.accountById.accountStatusByAccountStatus.state in :accountStatuses" +
             " and ((upper(p.name) like upper(concat('%',:text,'%')) or upper(p.surname)" +

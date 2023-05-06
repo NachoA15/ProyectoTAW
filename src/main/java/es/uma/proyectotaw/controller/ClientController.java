@@ -186,6 +186,19 @@ public class ClientController {
         return "management/pending_clients";
     }
 
+    @GetMapping("clients/inactive")
+    public String doShowInactiveClients(Model model, HttpSession session) {
+        // Comprobar que el usuario es gestor
+        UserDTO user = (UserDTO) session.getAttribute("management");
+        if (user == null) {
+            return "redirect:/";
+        }
+
+
+
+        return "management/inactive";
+    }
+
     @GetMapping("clients/confirm/{id}")
     public String doConfirmRegistration(@PathVariable("id") Integer clientId,
                                         HttpSession session) {

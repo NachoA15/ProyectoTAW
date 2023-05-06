@@ -14,6 +14,7 @@ import es.uma.proyectotaw.service.ClientService;
 import es.uma.proyectotaw.service.PersonService;
 import es.uma.proyectotaw.service.UserService;
 import es.uma.proyectotaw.ui.SignUp;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -32,84 +33,53 @@ public class LoginController {
     protected UserService userService;
     @Autowired
     protected PersonService personService;
-
     @Autowired
     protected UserRepository userRepository;
-
-    @Autowired
-    protected PersonRepository personRepository;
-
-    @Autowired
-    protected CompanyRepository companyRepository;
 
     @GetMapping("/")
     public String doShowLogin() {
         return "login";
     }
 
+    /**
+     * @author: Ignacio Alba
+     */
     @PostMapping("/")
     public String doAuthenticate(@RequestParam("email") String email,
                                  @RequestParam("password") String password,
                                  Model model, HttpSession session) {
-        String urlTo = "redirect:/";
-        UserDTO userDTO = this.userService.authenticate(email, password);
-        PersonEntity person = this.personRepository.getPersonByPersonUser(userDTO.getId());
+        String urlTo;
+        UserDTO user = this.userService.authenticate(email,password);
 
-        if (userDTO == null) {
+        if (user == null) {
             model.addAttribute("error", "Incorrect credentials. Please try again.");
             urlTo = "login";
-
-        } else if((person == null && this.companyRepository.getCompanyByCompanyUser(userDTO.getId()) != null && this.companyRepository.getCompanyByCompanyUser(userDTO.getId()).getClientByCompanyClient().getClientStatusByStatus().equals("Pending"))
-                || (person != null && this.personService.getPersonByUser(userDTO.getId()).getClientByPersonClient().getClientStatusByStatus().equals("Pending"))){
-
-
-        } else if((person == null && this.companyRepository.getCompanyByCompanyUser(userDTO.getId()) != null &&
-                this.companyRepository.getCompanyByCompanyUser(userDTO.getId()).getClientByCompanyClient().getClientStatusByStatus().equals("Pending"))){
-
-            model.addAttribute("error", "It must first be approved by a manager.");
-            urlTo = "login";
-        }
-        else {
-            if (userDTO.getRole().equals("management")) {
-                session.setAttribute("management", userDTO);
-                urlTo = "redirect:/clients";
-            }else if(userDTO.getRole().equals("client")){
-                Client_PersonDTO personDTO = this.personService.getPersonByUser(userDTO.getId());
-                if(personDTO.getClientByPersonClient().getClientStatusByStatus().equals("Pending")){
-                    model.addAttribute("error", "Management");
-                    urlTo = "login";
-                }else{
-                    session.setAttribute("client", userDTO);
-                    urlTo = "redirect:/client?id=" + userDTO.getId();
-                }
-
-            }else if(userDTO.getRole().equals("assistant")){
-                session.setAttribute("assistant", userDTO);
-                urlTo ="redirect:/assistant";
-            } else if (userDTO.getRole().equals("company-partner")) {
-                UserEntity user = this.userRepository.findById(userDTO.getId()).orElse(null);
-                session.setAttribute("company_person", user);
-                urlTo = "redirect:/company/company_person?id=" + user.getId();
-            } else if (userDTO.getRole().equals("company-authorised")) {
-                UserEntity user = this.userRepository.findById(userDTO.getId()).orElse(null);
-                PersonEntity p = this.personRepository.getPersonByPersonUser(user.getId());
-                CompanyEntity c = null;
-
-                if(p == null) {
-                    c = this.companyRepository.getCompanyByCompanyUser(user.getId());
-                }
-                else {
-                    c = p.getCompanyByRelatedCompany();
-                }
-
-                if(p != null) {
-                    session.setAttribute("company_person", user);
-                    urlTo = "redirect:/company/company_person?id=" + user.getId();
-                }
-                else {
-                    session.setAttribute("company", c);
-                    urlTo = "redirect:/company/company?id=" + c.getId();
-                }
+        } else if (user.getRole().equals("management")) {
+            session.setAttribute("management", user);
+            urlTo = "redirect:/clients";
+        } else if (user.getRole().equals("assistant")) {
+            session.setAttribute("assistant", user);
+            urlTo = "redirect:/assistant";
+        } else if (user.getRole().equals("client")) {
+            if (user.getClientStatus().equals("Pending")) {
+                model.addAttribute("error", "Your registration must first be approved by a manager.");
+                urlTo = "login";
+            } else {
+                session.setAttribute("client", user);
+                urlTo = "redirect:/client?id=" + user.getId();
+            }
+        } else if (user.getRole().equals("company-partner")) {
+            UserEntity userEntity = this.userRepository.findById(user.getId()).orElse(null);
+            session.setAttribute("company_person", userEntity);
+            urlTo = "redirect:/company/company_person?id=" + userEntity.getId();
+        } else {
+            UserEntity userEntity = this.userRepository.findById(user.getId()).orElse(null);
+            if (userEntity.getPersonById() == null) {
+                session.setAttribute("company", userEntity.getCompanyById());
+                urlTo = "redirect:/company/company?id=" + userEntity.getCompanyById().getId();
+            } else {
+                session.setAttribute("company_person", userEntity);
+                urlTo = "redirect:/company/company_person?id=" + userEntity.getId();
             }
         }
 

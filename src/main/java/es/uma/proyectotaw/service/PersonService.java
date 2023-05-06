@@ -36,6 +36,11 @@ public class PersonService {
         return this.listPersonsToPartialDTO(pendingPersons);
     }
 
+    public List<PartialPersonDTO> getInactivePersons() {
+        List<PersonEntity> inactivePersons = this.personRepository.getInactivePersons();
+        return this.listPersonsToPartialDTO(inactivePersons);
+    }
+
     public FullPersonDTO getPersonById(Integer id) {
         PersonEntity personById = this.personRepository.findById(id).orElse(null);
         return personById.toDTO();

@@ -25,7 +25,12 @@
 </head>
 <body>
     <h2>Registered clients list</h2>
-    <a href="/clients/pending">View requests of new clients to be registered</a>
+
+    <ul>
+        <li><a href="/clients/pending">View requests of new clients to be registered</a></li>
+        <li><a href="/clients/inactive">View clients who haven't been active in 30 days</a></li>
+    </ul>
+
     <hr/>
         <h3>Filter by:</h3>
         <form:form action="/clients/filter" modelAttribute="filter" method="post">

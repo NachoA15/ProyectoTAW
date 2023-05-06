@@ -1,7 +1,7 @@
 package es.uma.proyectotaw.dto;
 
 /**
- * @author: Iván Delgado
+ * @author: Iván Delgado (80%) -- Ignacio Alba (20%)
  */
 public class UserDTO {
 
@@ -12,6 +12,8 @@ public class UserDTO {
     private String password;
 
     private String role;
+
+    private String clientStatus;
 
     public UserDTO() {
     }
@@ -46,5 +48,13 @@ public class UserDTO {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getClientStatus() {
+        return clientStatus;
+    }
+
+    public void setClientStatus(String clientStatus) {
+        this.clientStatus = clientStatus;
     }
 }

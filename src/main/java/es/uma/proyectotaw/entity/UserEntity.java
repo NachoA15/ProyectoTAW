@@ -27,12 +27,12 @@ public class UserEntity {
     private String password;
     @OneToMany(mappedBy = "userByAssistant")
     private Collection<ChatEntity> chatsById;
-    @OneToMany(mappedBy = "userByCompanyUser")
-    private Collection<CompanyEntity> companiesById;
+    @OneToOne(mappedBy = "userByCompanyUser")
+    private CompanyEntity companyById;
     @OneToMany(mappedBy = "userByWriter")
     private Collection<MessageEntity> messagesById;
-    @OneToMany(mappedBy = "userByPersonUser")
-    private Collection<PersonEntity> peopleById;
+    @OneToOne(mappedBy = "userByPersonUser")
+    private PersonEntity personById;
     @ManyToOne
     @JoinColumn(name = "role", referencedColumnName = "id", nullable = false)
     private RoleUserEntity roleUserByRole;
@@ -82,12 +82,12 @@ public class UserEntity {
         this.chatsById = chatsById;
     }
 
-    public Collection<CompanyEntity> getCompaniesById() {
-        return companiesById;
+    public CompanyEntity getCompanyById() {
+        return companyById;
     }
 
-    public void setCompaniesById(Collection<CompanyEntity> companiesById) {
-        this.companiesById = companiesById;
+    public void setCompaniesById(CompanyEntity companyById) {
+        this.companyById = companyById;
     }
 
     public Collection<MessageEntity> getMessagesById() {
@@ -98,12 +98,12 @@ public class UserEntity {
         this.messagesById = messagesById;
     }
 
-    public Collection<PersonEntity> getPeopleById() {
-        return peopleById;
+    public PersonEntity getPersonById() {
+        return personById;
     }
 
-    public void setPeopleById(Collection<PersonEntity> peopleById) {
-        this.peopleById = peopleById;
+    public void setPersonById(PersonEntity personById) {
+        this.personById = personById;
     }
 
     public RoleUserEntity getRoleUserByRole() {
@@ -123,6 +123,14 @@ public class UserEntity {
         dto.setEmail(getEmail());
         dto.setPassword(getPassword());
         dto.setRole(getRoleUserByRole().getRole());
+
+        if (this.personById != null) {
+            String clientStatus = this.personById.getClientByPersonClient() != null? this.personById.getClientByPersonClient().getClientStatusByStatus().getStatus() : null;
+            dto.setClientStatus(clientStatus);
+        } else if (this.companyById != null){
+            dto.setClientStatus(this.companyById.getClientByCompanyClient().getClientStatusByStatus().getStatus());
+        }
+
         return dto;
     }
 }

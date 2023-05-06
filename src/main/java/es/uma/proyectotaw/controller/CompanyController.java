@@ -62,13 +62,11 @@ public class CompanyController {
     @Autowired
     protected RoleUserRepository roleUserRepository;
 
-    /**
-     *
-     *
-     * ----------COMPANY------
-     *
-     *
-     */
+    /*
+    =================================================================================================
+        EMPRESA -- Autor: Martin Pur
+    =================================================================================================
+    */
 
     public UserEntity getCompanyUserBySessionUser(UserEntity sessionUser) {
         PersonEntity p = this.personRepository.getPersonByPersonUser(sessionUser.getId());
@@ -951,6 +949,12 @@ public class CompanyController {
 
         return "company/company";
     }
+
+    /*
+    =================================================================================================
+        FIN EMPRESA -- Autor: Martin Pur
+    =================================================================================================
+    */
 }
 
 

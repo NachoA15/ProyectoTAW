@@ -40,7 +40,7 @@ public class PersonEntity {
     @OneToOne
     @JoinColumn(name = "person_client", referencedColumnName = "id")
     private ClientEntity clientByPersonClient;
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "person_user", referencedColumnName = "id", nullable = false)
     private UserEntity userByPersonUser;
 
