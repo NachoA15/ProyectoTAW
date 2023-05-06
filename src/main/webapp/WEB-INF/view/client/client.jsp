@@ -104,5 +104,8 @@
 <h3><a href="/client/chat/<%=client.getId()%>">Chat with assistant</a></h3>
 
 <h3><a href="/logout"> LogOut</a> </h3>
+
+<br/>
+<h2><a href="/atm/<%=client.getId()%>"> Go to ATM </a></h2>
 </body>
 </html>

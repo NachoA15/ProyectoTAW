@@ -112,4 +112,29 @@ public class OperationService{
 
         this.operationRepository.save(operation);
     }
+
+    public void saveTakeMoney(OperationAuxClient operationAuxClient){
+        OperationEntity operation = new OperationEntity();
+        AccountEntity account = this.accountRepository.findById(operationAuxClient.getOrigin()).orElse(null);
+        PaymentEntity payment = this.paymentRepository.getPaymentEntityByCurrency(operationAuxClient.getPayment());
+
+
+        if(operationAuxClient.getCurrentChangeDestination() != ""){
+            CurrencyChangeEntity currencyChange = this.currencyChangeRespository.getCurrencyChangeEntitiesByOriginAndDestination(
+                    operationAuxClient.getCurrentChangeOrigin(), operationAuxClient.getCurrentChangeDestination());
+
+            operation.setCurrencyChangeByCurrencyChange(currencyChange);
+        }
+
+        operation.setAccountByOrigin(account);
+        operation.setAccountByDestination(account);
+        operation.setPaymentByPayment(payment);
+
+        java.sql.Date fecha = new java.sql.Date(new java.util.Date().getTime());
+        operation.setDate(fecha);
+        operation.setAmount(Double.parseDouble(operationAuxClient.getAmount()));
+        operation.getAccountByOrigin().setBalance(operation.getAccountByOrigin().getBalance() - Double.parseDouble(operationAuxClient.getAmount()));
+
+        this.operationRepository.save(operation);
+    }
 }
