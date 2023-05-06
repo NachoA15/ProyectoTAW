@@ -1,11 +1,18 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Currency change</title>
 </head>
 <body>
 <h1>Make a currency change</h1>
+
+<c:if test="${error != null}" >
+    <p style="color:red">
+            ${error}
+    </p>
+</c:if>
 
 <form:form action="/company/currency_change" method="post" modelAttribute="operation">
     <form:hidden path="origin"/><br/>

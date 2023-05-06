@@ -101,7 +101,7 @@ public class CompanyController {
                                     @RequestParam("confirm_passwordPartner") String confirm_passwordPartner,
                                     @RequestParam("firstName") String firstName,
                                     @RequestParam("surname") String surname,
-                                    @RequestParam("birthdate") Date birthdate,
+                                    @RequestParam(name = "birthdate", required = true) Date birthdate,
                                     @RequestParam("identificationNumberPartner") String identificationNumberPartner,
                                     @RequestParam("streetPartner") String streetPartner,
                                     @RequestParam("streetNumberPartner") String streetNumberPartner,
@@ -124,6 +124,18 @@ public class CompanyController {
 
         List<CompanyAreaEntity> companyAreas = this.companyAreaRepository.findAll();
         model.addAttribute("companyAreas", companyAreas);
+
+        if(name.isEmpty() || cif.isEmpty() || url.isEmpty() || emailPartner.isEmpty() || firstName.isEmpty()
+                || surname.isEmpty() || identificationNumberPartner.isEmpty() || streetPartner.isEmpty()
+                || streetNumberPartner.isEmpty() || cityPartner.isEmpty() || regionPartner.isEmpty()
+                || zipPartner.isEmpty() || countryPartner.isEmpty() || phonePartner.isEmpty() || emailCompany.isEmpty()
+                || identificationNumberCompany.isEmpty() || streetCompany.isEmpty() || streetNumberCompany.isEmpty()
+                || cityCompany.isEmpty() || regionCompany.isEmpty() || zipCompany.isEmpty() || countryCompany.isEmpty()
+                || phoneCompany.isEmpty()) {
+
+            model.addAttribute("error", "Fill all the fields.");
+            return "company/register";
+        }
 
         if (!passwordPartner.equals(confirm_passwordPartner) || passwordPartner.length() < 4) {
             model.addAttribute("error", "Passwords of partner dont match or are short.");
@@ -189,6 +201,7 @@ public class CompanyController {
         aCompany.setStreet(streetCompany);
         aCompany.setNumber(streetNumberCompany);
         aCompany.setCity(cityCompany);
+        aCompany.setRegion(regionCompany);
         aCompany.setZipCode(zipCompany);
         aCompany.setCountry(countryCompany);
 
@@ -258,6 +271,14 @@ public class CompanyController {
                                         @RequestParam("email") String email,
                                         @RequestParam("password") String password,
                                         @RequestParam("confirm_password") String confirm_password) {
+
+        if(email.isEmpty() || firstName.isEmpty() || surname.isEmpty() || birthdate == null || identificationNumber.isEmpty() || street.isEmpty()
+                || streetNumber.isEmpty() || city.isEmpty() || region.isEmpty()
+                || zip.isEmpty() || country.isEmpty() || phone.isEmpty() || role.isEmpty()) {
+
+            model.addAttribute("error", "Fill all the fields.");
+            return "company/register_user";
+        }
 
         if (!password.equals(confirm_password) || password.length() < 4) {
             model.addAttribute("error", "Passwords of partner dont match or are short.");
@@ -342,15 +363,25 @@ public class CompanyController {
                                     @RequestParam("password") String password,
                                     @RequestParam("confirm_password") String confirm_password) {
 
-        if (!password.equals(confirm_password) || password.length() < 4) {
-            model.addAttribute("error", "Passwords dont match or are short.");
-            return "company/edit_user";
-        }
-
         UserEntity loggedUser = (UserEntity) session.getAttribute("company_person");
 
         if(loggedUser == null) {
             return "redirect:/";
+        }
+
+        if(email.isEmpty() || firstName.isEmpty() || surname.isEmpty() || birthdate == null || identificationNumber.isEmpty() || street.isEmpty()
+                || streetNumber.isEmpty() || city.isEmpty() || region.isEmpty()
+                || zip.isEmpty() || country.isEmpty() || phone.isEmpty()) {
+
+            model.addAttribute("error", "Fill all the fields.");
+            model.addAttribute("companyUser", this.personRepository.getPersonByPersonUser(loggedUser.getId()));
+            return "company/edit_user";
+        }
+
+        if (!password.equals(confirm_password) || password.length() < 4) {
+            model.addAttribute("error", "Passwords dont match or are short.");
+            model.addAttribute("companyUser", this.personRepository.getPersonByPersonUser(loggedUser.getId()));
+            return "company/edit_user";
         }
 
         UserEntity existingPartner = this.userRepository.findByEmail(email);
@@ -456,14 +487,27 @@ public class CompanyController {
             c = p.getCompanyByRelatedCompany();
         }
 
+        ClientEntity clientCompany = this.clientRepository.getById(c.getClientByCompanyClient().getId());
+        UserEntity userCompany = this.userRepository.getById(c.getUserByCompanyUser().getId());
+
+        if(email.isEmpty() || name.isEmpty() || url.isEmpty() || cif.isEmpty() || identificationNumber.isEmpty()
+                || street.isEmpty() || streetNumber.isEmpty() || city.isEmpty() || region.isEmpty()
+                || zip.isEmpty() || country.isEmpty() || phone.isEmpty() || area.isEmpty()) {
+
+            model.addAttribute("error", "Fill all the fields.");
+            model.addAttribute("error", "Passwords dont match or are short.");
+            model.addAttribute("company", c);
+            model.addAttribute("clientCompany", clientCompany);
+            model.addAttribute("userCompany", userCompany);
+            model.addAttribute("companyAreas", companyAreas);
+            return "company/edit_company";
+        }
+
         if(loggedCompany == null && loggedUser == null) {
             return "redirect:/";
         }
 
         UserEntity existingCompanyEmail = this.userRepository.findByEmail(email);
-
-        ClientEntity clientCompany = this.clientRepository.getById(c.getClientByCompanyClient().getId());
-        UserEntity userCompany = this.userRepository.getById(c.getUserByCompanyUser().getId());
         AddressEntity a = this.addressRepository.getById(clientCompany.getAddressByAddress().getId());
 
         if (!password.equals(confirm_password) || password.length() < 4) {
@@ -665,7 +709,12 @@ public class CompanyController {
             List<AccountEntity> listAccounts = this.accountRepository.getAccountWithoutMe(client.getId());
             List<String> listCurrency = this.currencyChangeRespository.getCurrencyChangeByOrigin();
             List<String> listCurrencyDestination = this.currencyChangeRespository.getCurrencyChangeByDestination();
-            listCurrency.addAll(listCurrencyDestination);
+
+            for (String currency : listCurrencyDestination) {
+                if (!listCurrency.contains(currency)) {
+                    listCurrency.add(currency);
+                }
+            }
 
             model.addAttribute("operation", operation);
             model.addAttribute("accounts", listAccounts);
@@ -676,7 +725,7 @@ public class CompanyController {
     }
 
     @PostMapping("/company/transfer")
-    public String doMakeTransfer(@ModelAttribute("operation") OperationAuxCompany operationAuxCompany, HttpSession session) {
+    public String doMakeTransfer(@ModelAttribute("operation") OperationAuxCompany operationAuxCompany, HttpSession session, Model model) {
         UserEntity loggedUser = (UserEntity) session.getAttribute("company_person");
 
         if (loggedUser == null) {
@@ -684,6 +733,16 @@ public class CompanyController {
         }
 
         OperationEntity operation = new OperationEntity();
+
+        if(operationAuxCompany.getDestination() == null || operationAuxCompany.getAmount() == 0.0
+                || operationAuxCompany.getPayment() == "") {
+            model.addAttribute("error", "Fill all the fields.");
+            List<AccountEntity> listAccounts = this.accountRepository.getAccountWithoutMe(this.clientRepository.getClientByUser(loggedUser.getId()).getId());
+            List<String> listCurrency = this.currencyChangeRespository.getCurrencyChangeByOrigin();
+            model.addAttribute("accounts", listAccounts);
+            model.addAttribute("currency", listCurrency);
+            return "company/transfer";
+        }
 
         java.sql.Date date = new java.sql.Date(new java.util.Date().getTime());
         operation.setDate(date);
@@ -698,6 +757,11 @@ public class CompanyController {
 
         AccountEntity accountOrigin = operation.getAccountByOrigin();
         AccountEntity accountDestination = operation.getAccountByDestination();
+
+        if(accountOrigin.getBalance() - operation.getAmount() < 0){
+            model.addAttribute("error", "You dont have enough money.");
+            return "redirect:/company/company_person?id=" + loggedUser.getId();
+        }
 
         accountOrigin.setBalance(accountOrigin.getBalance() - operation.getAmount());
         accountDestination.setBalance(accountDestination.getBalance() + operation.getAmount());
@@ -733,7 +797,12 @@ public class CompanyController {
 
             List<String> listCurrency = this.currencyChangeRespository.getCurrencyChangeByOrigin();
             List<String> listCurrencyDestination = this.currencyChangeRespository.getCurrencyChangeByDestination();
-            listCurrency.addAll(listCurrencyDestination);
+
+            for (String currency : listCurrencyDestination) {
+                if (!listCurrency.contains(currency)) {
+                    listCurrency.add(currency);
+                }
+            }
 
             model.addAttribute("operation", operation);
             model.addAttribute("accounts", listAccounts);
@@ -744,7 +813,7 @@ public class CompanyController {
     }
 
     @PostMapping("/company/currency_change")
-    public String doChangeCurrency(HttpSession httpSession, @ModelAttribute("operation") OperationAuxCompany operationAuxCompany) {
+    public String doChangeCurrency(HttpSession httpSession, @ModelAttribute("operation") OperationAuxCompany operationAuxCompany, Model model) {
         UserEntity loggedUser = (UserEntity) httpSession.getAttribute("company_person");
 
         if (loggedUser == null) {
@@ -753,11 +822,28 @@ public class CompanyController {
 
         OperationEntity operation = new OperationEntity();
 
+        if(operationAuxCompany.getCurrentChangeOrigin().isEmpty() || operationAuxCompany.getCurrentChangeDestination().isEmpty() || operationAuxCompany.getAmount() == 0.0) {
+            model.addAttribute("error", "Fill all the fields.");
+            List<AccountEntity> listAccounts = this.accountRepository.getAccountWithoutMe(this.clientRepository.getClientByUser(loggedUser.getId()).getId());
+            List<String> listCurrency = this.currencyChangeRespository.getCurrencyChangeByOrigin();
+            model.addAttribute("accounts", listAccounts);
+            model.addAttribute("currency", listCurrency);
+            return "company/currency_change";
+        }
+
+        ClientEntity client = this.clientRepository.getClientByUser(loggedUser.getId());
+        AccountEntity account = this.accountRepository.getAccountByIdClient(client.getId());
+
         java.sql.Date date = new java.sql.Date(new java.util.Date().getTime());
         operation.setDate(date);
         operation.setAccountByOrigin(operationAuxCompany.getOrigin());
         operation.setAccountByDestination(operationAuxCompany.getDestination());
         operation.setAmount(operationAuxCompany.getAmount());
+
+        if(account.getBalance() < 0){
+            model.addAttribute("error", "You dont have enough money.");
+            return "redirect:/company/company_person?id=" + loggedUser.getId();
+        }
 
         CurrencyChangeEntity currencyChange = new CurrencyChangeEntity();
         currencyChange.setOriginCurrency(operationAuxCompany.getCurrentChangeOrigin());

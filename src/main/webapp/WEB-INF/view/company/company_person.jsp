@@ -11,7 +11,7 @@
 %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Company person</title>
 </head>
 <body>
 <h1>My profile</h1>
@@ -19,6 +19,12 @@
 <c:if test="${info != null}" >
     <p style="color:red">
             ${info}
+    </p>
+</c:if>
+
+<c:if test="${error != null}" >
+    <p style="color:red">
+            ${error}
     </p>
 </c:if>
 

@@ -7,7 +7,7 @@
 %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Register user</title>
 </head>
 <body>
 <h1>Register company user / authorised</h1>
@@ -35,7 +35,7 @@
         <tr>
             <td>Birthdate:</td>
             <td>
-                <input type="text" name="birthdate">
+                <input type="text" name="birthdate" required>
             </td>
         </tr>
         <tr>

@@ -10,7 +10,7 @@
 %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Operations</title>
 </head>
 <body>
 <h1><%=company.getName()%></h1>
@@ -53,6 +53,7 @@
         <th>IBAN ORIGIN</th>
         <th>IBAN DESTINATION</th>
         <th>AMOUNT</th>
+        <th>PAYMENT</th>
         <th>DATE</th>
     </tr>
 
@@ -66,6 +67,17 @@
             <td><%=o.getAccountByOrigin().getIban()%></td>
             <td><%=o.getAccountByDestination().getIban()%></td>
             <td><%=o.getAmount()%></td>
+            <%
+                if(o.getPaymentByPayment() != null) {
+            %>
+            <td><%=o.getPaymentByPayment().getCurrency()%></td>
+            <%
+                } else {
+            %>
+            <td><%=o.getCurrencyChangeByCurrencyChange().getDestinationCurrency()%></td>
+            <%
+                }
+            %>
             <td><%=o.getDate()%></td>
         </tr>
         <%
