@@ -22,6 +22,12 @@
     </p>
 </c:if>
 
+<c:if test="${error != null}" >
+    <p style="color:red">
+            ${error}
+    </p>
+</c:if>
+
 <br/>
 <a href="/logout">Log out</a>
 

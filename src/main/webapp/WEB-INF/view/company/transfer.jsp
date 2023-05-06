@@ -1,4 +1,5 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
@@ -6,6 +7,12 @@
 </head>
 <body>
 <h1>Make a transfer</h1>
+
+<c:if test="${error != null}" >
+    <p style="color:red">
+            ${error}
+    </p>
+</c:if>
 
 <form:form action="/company/transfer" method="post" modelAttribute="operation">
     <form:hidden path="origin"/><br/>
