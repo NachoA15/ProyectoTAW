@@ -6,7 +6,7 @@
 %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Edit user</title>
 </head>
 <body>
 <h1>Edit profile</h1>

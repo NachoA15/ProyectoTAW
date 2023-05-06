@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Make a transfer</title>
 </head>
 <body>
 <h1>Make a transfer</h1>

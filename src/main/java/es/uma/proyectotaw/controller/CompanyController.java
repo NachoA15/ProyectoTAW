@@ -101,7 +101,7 @@ public class CompanyController {
                                     @RequestParam("confirm_passwordPartner") String confirm_passwordPartner,
                                     @RequestParam("firstName") String firstName,
                                     @RequestParam("surname") String surname,
-                                    @RequestParam("birthdate") Date birthdate,
+                                    @RequestParam(name = "birthdate", required = true) Date birthdate,
                                     @RequestParam("identificationNumberPartner") String identificationNumberPartner,
                                     @RequestParam("streetPartner") String streetPartner,
                                     @RequestParam("streetNumberPartner") String streetNumberPartner,
@@ -126,7 +126,7 @@ public class CompanyController {
         model.addAttribute("companyAreas", companyAreas);
 
         if(name.isEmpty() || cif.isEmpty() || url.isEmpty() || emailPartner.isEmpty() || firstName.isEmpty()
-                || surname.isEmpty() || birthdate == null || identificationNumberPartner.isEmpty() || streetPartner.isEmpty()
+                || surname.isEmpty() || identificationNumberPartner.isEmpty() || streetPartner.isEmpty()
                 || streetNumberPartner.isEmpty() || cityPartner.isEmpty() || regionPartner.isEmpty()
                 || zipPartner.isEmpty() || countryPartner.isEmpty() || phonePartner.isEmpty() || emailCompany.isEmpty()
                 || identificationNumberCompany.isEmpty() || streetCompany.isEmpty() || streetNumberCompany.isEmpty()

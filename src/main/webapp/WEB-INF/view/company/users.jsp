@@ -15,7 +15,7 @@
 %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Company users</title>
 </head>
 <body>
 <h1><%=company.getName()%></h1>

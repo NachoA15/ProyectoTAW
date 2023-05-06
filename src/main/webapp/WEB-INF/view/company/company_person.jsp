@@ -11,7 +11,7 @@
 %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Company person</title>
 </head>
 <body>
 <h1>My profile</h1>

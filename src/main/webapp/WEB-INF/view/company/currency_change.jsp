@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Currency change</title>
 </head>
 <body>
 <h1>Make a currency change</h1>

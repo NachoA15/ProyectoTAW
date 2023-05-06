@@ -14,7 +14,7 @@
 %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Edit company</title>
 </head>
 <body>
 <h1>Edit company</h1>

@@ -10,7 +10,7 @@
 %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Operations</title>
 </head>
 <body>
 <h1><%=company.getName()%></h1>
