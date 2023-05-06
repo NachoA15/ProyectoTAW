@@ -8,6 +8,9 @@
   Time: 9:03
   To change this template use File | Settings | File Templates.
 --%>
+
+<%-- Author: Manuel Jesús Jerez --%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     Client_ClientDTO client = (Client_ClientDTO) request.getAttribute("client");
@@ -31,7 +34,7 @@
             <form:option value=""/>
             <form:options items="${accounts}" itemLabel="iban" itemValue="id"/>
         </form:select>
-        Date:<form:input path="date"/>
+        Date:<form:input path="date" type="date"/>
         Payment:
         <form:select path="payment">
             <form:option value=""/>
@@ -58,8 +61,18 @@
                 <td style="text-align: center"><%=op.getAccountOriginByOperation().getIban()%></td>
                 <td style="text-align: center"><%=op.getAccountDestinationByOperation().getIban()%></td>
                 <td style="text-align: center"><%=op.getDate()%></td>
-                <td style="text-align: center"><%=op.getCurrencyChangeByCurrencyChange() != null ? op.getCurrencyChangeByCurrencyChange().getId() : "" %></td>
-                <td style="text-align: center"><%=op.getPaymentByPayment()%></td>
+                <%
+                    if(op.getCurrencyChangeByCurrencyChange() != null){
+                %>
+                        <td style="text-align: center"><%=op.getCurrencyChangeByCurrencyChange().getOriginCurrency()%>, <%=op.getCurrencyChangeByCurrencyChange().getDestinationCurrency()%></td>
+                <%
+                    }else{
+                %>
+                        <td></td>
+                <%
+                    }
+                %>
+                <td style="text-align: center"><%=op.getPaymentByPayment() != null ? op.getPaymentByPayment() : ""%></td>
                 <td style="text-align: center"><%=op.getAmount()%></td>
             </tr>
 

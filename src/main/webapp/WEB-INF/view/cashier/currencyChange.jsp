@@ -1,5 +1,3 @@
-<%@ page import="es.uma.proyectotaw.dto.UserDTO" %>
-<%@ page import="es.uma.proyectotaw.dto.client.Client_AccountDTO" %>
 <%@ page import="es.uma.proyectotaw.dto.client.Client_ClientDTO" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -10,6 +8,9 @@
   Time: 19:29
   To change this template use File | Settings | File Templates.
 --%>
+
+<%-- Author: Manuel Jesús Jerez --%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%
@@ -25,7 +26,7 @@
   <h3><a href="/atm/<%=client.getId()%>">Back</a></h3>
 
   <h2>Indicate the amount of money to take out
-  and the destination currency: </h2>
+  and the currency change: </h2>
 
   <c:if test="${error != null}">
     <p style="color: red">

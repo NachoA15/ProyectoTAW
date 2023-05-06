@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="es.uma.proyectotaw.dto.client.Client_ClientDTO" %>
 <%@ page import="es.uma.proyectotaw.dto.UserDTO" %>
 <%@ page import="es.uma.proyectotaw.dto.client.Client_AccountDTO" %><%--
@@ -7,6 +8,9 @@
   Time: 18:31
   To change this template use File | Settings | File Templates.
 --%>
+
+<%-- Author: Manuel Jesús Jerez --%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     Client_ClientDTO client = (Client_ClientDTO) request.getAttribute("client");
@@ -20,6 +24,12 @@
 </head>
 <body>
     <h3> <a href="/client?id=<%=user.getId()%>"> Back to client </a></h3>
+
+    <c:if test="${error != null}">
+        <p style="color: red">
+            ${error}
+        </p>
+    </c:if>
 
     <h1 align="center">Welcome to the ATM</h1>
 
@@ -41,7 +51,7 @@
                 <%=account.getAccountStatusByAccountStatus().getStatus()%>
 
                 <% if(account.getAccountStatusByAccountStatus().getStatus().equals("Blocked")) {%>
-                    <br/><a href="/activation?id=<%=account.getId()%>">Request activation</a>
+                    <br/><a href="/activationATM/<%=account.getId()%>">Request activation</a>
                 <%
                     }else if(account.getAccountStatusByAccountStatus().getStatus().equals("Pending")) {
                 %>

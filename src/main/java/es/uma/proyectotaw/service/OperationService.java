@@ -113,17 +113,30 @@ public class OperationService{
         this.operationRepository.save(operation);
     }
 
+    /**
+     * @author: Manuel Jesús Jerez
+     */
+
     public void saveTakeMoney(OperationAuxClient operationAuxClient){
         OperationEntity operation = new OperationEntity();
         AccountEntity account = this.accountRepository.findById(operationAuxClient.getOrigin()).orElse(null);
         PaymentEntity payment = this.paymentRepository.getPaymentEntityByCurrency(operationAuxClient.getPayment());
 
-
-        if(operationAuxClient.getCurrentChangeDestination() != ""){
+        if(!operationAuxClient.getCurrentChangeDestination().equals("")){
             CurrencyChangeEntity currencyChange = this.currencyChangeRespository.getCurrencyChangeEntitiesByOriginAndDestination(
                     operationAuxClient.getCurrentChangeOrigin(), operationAuxClient.getCurrentChangeDestination());
 
-            operation.setCurrencyChangeByCurrencyChange(currencyChange);
+            if(currencyChange == null){ //Si la currencyChange no existe aún
+                CurrencyChangeEntity newCurrencyChange = new CurrencyChangeEntity();
+                newCurrencyChange.setOriginCurrency(operationAuxClient.getCurrentChangeOrigin());
+                newCurrencyChange.setDestinationCurrency(operationAuxClient.getCurrentChangeDestination());
+
+                this.currencyChangeRespository.save(newCurrencyChange);
+
+                operation.setCurrencyChangeByCurrencyChange(newCurrencyChange);
+            }else{
+                operation.setCurrencyChangeByCurrencyChange(currencyChange);
+            }
         }
 
         operation.setAccountByOrigin(account);
