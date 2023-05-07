@@ -5,6 +5,9 @@ import es.uma.proyectotaw.dao.CurrencyChangeRespository;
 import es.uma.proyectotaw.dao.OperationRepository;
 import es.uma.proyectotaw.dao.PaymentRepository;
 import es.uma.proyectotaw.dto.client.Client_OperationDTO;
+import es.uma.proyectotaw.dto.management.FullClientDTO;
+import es.uma.proyectotaw.dto.management.OperationDTO;
+import es.uma.proyectotaw.dto.management.PartialClientDTO;
 import es.uma.proyectotaw.entity.*;
 import es.uma.proyectotaw.ui.FilterOperationsClient;
 import es.uma.proyectotaw.ui.OperationAuxClient;
@@ -28,7 +31,34 @@ public class OperationService{
     @Autowired
     protected CurrencyChangeRespository currencyChangeRespository;
 
+    /**
+     * @author: Ignacio Alba
+     */
+    public List<OperationDTO> getOperations(PartialClientDTO client) {
+        List<OperationEntity> operations = this.operationRepository.getOperationByMyAccount(client.getAccount().getId());
+        return this.listOperationsToManagementOperationDTO(operations);
+    }
 
+    /**
+     * @author: Ignacio Alba
+     */
+    public List<OperationDTO> getOperationsByText(PartialClientDTO client, String origin, String destination, String order) {
+        List<OperationEntity> operations = this.operationRepository.getOperationsByText(client.getAccount().getId(), origin, destination);
+        return this.listOperationsToManagementOperationDTO(operations);
+    }
+
+    /**
+     * @author: Ignacio Alba
+     */
+    private List<OperationDTO> listOperationsToManagementOperationDTO(List<OperationEntity> list) {
+        List<OperationDTO> dtos = new ArrayList<>();
+        list.forEach((final OperationEntity op) -> dtos.add(op.toManagementDTO()));
+        return dtos;
+    }
+
+    /**
+     * @author: Marina Sayago
+     */
     public List<Client_OperationDTO> listOperations (FilterOperationsClient filter, Integer idClient){
         AccountEntity account = this.accountRepository.getAccountByIdClient(idClient);
         List<OperationEntity> listOperations = this.operationRepository.getOperationByMyAccount(account.getId());
@@ -48,14 +78,16 @@ public class OperationService{
         if(filter.getCurrency() != "") listOperations = listOperations.stream().filter(operation -> operation.getCurrencyChangeByCurrencyChange() != null && (operation.getCurrencyChangeByCurrencyChange().getOriginCurrency()
                 .equals(filter.getCurrency()) || operation.getCurrencyChangeByCurrencyChange().getDestinationCurrency().equals(filter.getCurrency()) ||
                 operation.getCurrencyChangeByCurrencyChange().getOriginCurrency().equals(filter.getCurrency()) &&
-                operation.getCurrencyChangeByCurrencyChange().getDestinationCurrency().equals(filter.getCurrency()))).collect(Collectors.toList());
+                        operation.getCurrencyChangeByCurrencyChange().getDestinationCurrency().equals(filter.getCurrency()))).collect(Collectors.toList());
 
 
 
         return this.listaEntidadesADTO(listOperations);
     }
 
-
+    /**
+     * @author: Marina Sayago
+     */
     protected List<Client_OperationDTO> listaEntidadesADTO (List<OperationEntity> lista) {
         ArrayList dtos = new ArrayList<Client_OperationDTO>();
 
@@ -64,6 +96,9 @@ public class OperationService{
         return dtos;
     }
 
+    /**
+     * @author: Marina Sayago
+     */
     public void saveTransference(OperationAuxClient operationAuxClient){
         OperationEntity operation = new OperationEntity();
         AccountEntity accountOrigin = this.accountRepository.findById(operationAuxClient.getOrigin()).orElse(null);
@@ -87,6 +122,9 @@ public class OperationService{
         this.accountRepository.save(accountDestination);
     }
 
+    /**
+     * @author: Marina Sayago
+     */
     public void saveCurrencyChange(OperationAuxClient operationAuxClient){
         OperationEntity operation = new OperationEntity();
         AccountEntity account = this.accountRepository.findById(operationAuxClient.getOrigin()).orElse(null);
@@ -113,17 +151,29 @@ public class OperationService{
         this.operationRepository.save(operation);
     }
 
+    /**
+     * @author: Manuel Jesús Jerez
+     */
     public void saveTakeMoney(OperationAuxClient operationAuxClient){
         OperationEntity operation = new OperationEntity();
         AccountEntity account = this.accountRepository.findById(operationAuxClient.getOrigin()).orElse(null);
         PaymentEntity payment = this.paymentRepository.getPaymentEntityByCurrency(operationAuxClient.getPayment());
 
-
-        if(operationAuxClient.getCurrentChangeDestination() != ""){
+        if(!operationAuxClient.getCurrentChangeDestination().equals("")){
             CurrencyChangeEntity currencyChange = this.currencyChangeRespository.getCurrencyChangeEntitiesByOriginAndDestination(
                     operationAuxClient.getCurrentChangeOrigin(), operationAuxClient.getCurrentChangeDestination());
 
-            operation.setCurrencyChangeByCurrencyChange(currencyChange);
+            if(currencyChange == null){ //Si la currencyChange no existe aún
+                CurrencyChangeEntity newCurrencyChange = new CurrencyChangeEntity();
+                newCurrencyChange.setOriginCurrency(operationAuxClient.getCurrentChangeOrigin());
+                newCurrencyChange.setDestinationCurrency(operationAuxClient.getCurrentChangeDestination());
+
+                this.currencyChangeRespository.save(newCurrencyChange);
+
+                operation.setCurrencyChangeByCurrencyChange(newCurrencyChange);
+            }else{
+                operation.setCurrencyChangeByCurrencyChange(currencyChange);
+            }
         }
 
         operation.setAccountByOrigin(account);

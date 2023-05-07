@@ -10,10 +10,7 @@ import es.uma.proyectotaw.dto.client.Client_PersonDTO;
 import es.uma.proyectotaw.dto.management.*;
 import es.uma.proyectotaw.entity.UserEntity;
 import es.uma.proyectotaw.service.*;
-import es.uma.proyectotaw.ui.Filter;
-import es.uma.proyectotaw.ui.FilterOperationsClient;
-import es.uma.proyectotaw.ui.OperationAuxClient;
-import es.uma.proyectotaw.ui.ProfileAuxClient;
+import es.uma.proyectotaw.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -62,6 +59,8 @@ public class ClientController {
             GESTOR  -- Autor: Ignacio Alba
         =================================================================================================
      */
+
+    private String[] orderCriteria = {"Amount"};
 
     @GetMapping("/clients")
     public String doShowClients(Model model, HttpSession session) {
@@ -135,7 +134,7 @@ public class ClientController {
             return "redirect:/";
         }
 
-        FullPersonDTO person = this.personService.getPersonById(personId);
+        FullPersonDTO person = this.personService.getFullPersonById(personId);
         model.addAttribute("person", person);
 
         return "management/client";
@@ -150,21 +149,70 @@ public class ClientController {
             return "redirect:/";
         }
 
-        FullCompanyDTO company = this.companyService.getCompanyById(companyId);
+        FullCompanyDTO company = this.companyService.getFullCompanyById(companyId);
         model.addAttribute("company", company);
         return "management/client";
     }
 
-    @GetMapping("/clients/view/operations/{id}")
-    public String doShowOperations(@PathVariable("id") Integer clientId, Model model, HttpSession session) {
+    @GetMapping("/clients/operations/person/{id}")
+    public String doShowPersonOperations(@PathVariable("id") Integer personId, Model model, HttpSession session) {
+        return this.processOperationFiltering(null, model, session, "person", personId);
+    }
+
+    @PostMapping("/clients/operations/person/{id}/filter")
+    public String doFilterPersonOperations(@ModelAttribute("filter")FilterOperationsManagement filter,
+                                     @PathVariable("id") Integer id, HttpSession session, Model model) {
+        return this.processOperationFiltering(filter, model, session,"person",id);
+    }
+
+    @GetMapping("/clients/operations/company/{id}")
+    public String doShowCompanyOperations(@PathVariable("id") Integer companyId, Model model, HttpSession session) {
+        return this.processOperationFiltering(null, model, session, "company", companyId);
+    }
+
+    @PostMapping("/clients/operations/company/{id}/filter")
+    public String doFilterCompanyOperations(@ModelAttribute("filter")FilterOperationsManagement filter,
+                                     @PathVariable("id") Integer id, HttpSession session, Model model) {
+        return this.processOperationFiltering(filter, model, session,"company",id);
+    }
+
+    private String processOperationFiltering(FilterOperationsManagement filter, Model model, HttpSession session, String clientType, Integer id) {
         // Comprobar que el usuario es gestor
         UserDTO user = (UserDTO) session.getAttribute("management");
         if (user == null) {
             return "redirect:/";
         }
 
-        FullClientDTO client = this.clientService.getClientById(clientId);
-        model.addAttribute("client", client);
+        List<OperationDTO> operations;
+
+        if (filter == null || (filter.getOrigin().isEmpty() && filter.getDestination().isEmpty())) {
+            filter = new FilterOperationsManagement();
+            if (clientType.equals("person")) {
+                PartialPersonDTO person = this.personService.getPartialPersonById(id);
+                operations = this.operationService.getOperations(person.getClient());
+                model.addAttribute("person", person);
+            } else {
+                PartialCompanyDTO company = this.companyService.getPartialCompanyById(id);
+                operations = this.operationService.getOperations(company.getClient());
+                model.addAttribute("company", company);
+            }
+        } else {
+            if (clientType.equals("person")) {
+                PartialPersonDTO person = this.personService.getPartialPersonById(id);
+                operations = this.operationService.getOperationsByText(person.getClient(), filter.getOrigin(), filter.getDestination(), filter.getOrder());
+                model.addAttribute("person", person);
+            } else {
+                PartialCompanyDTO company = this.companyService.getPartialCompanyById(id);
+                operations = this.operationService.getOperationsByText(company.getClient(), filter.getOrigin(), filter.getDestination(), filter.getOrder());
+                model.addAttribute("company", company);
+            }
+        }
+
+        model.addAttribute("filter", filter);
+        model.addAttribute("operations", operations);
+
+
+        model.addAttribute("orderCriteria", orderCriteria);
 
         return "management/operations";
     }
@@ -194,7 +242,11 @@ public class ClientController {
             return "redirect:/";
         }
 
+        List<PartialPersonDTO> inactivePersons = this.personService.getInactivePersons();
+        List<PartialCompanyDTO> inactiveCompanies = this.companyService.getInactiveCompanies();
 
+        model.addAttribute("inactivePersons", inactivePersons);
+        model.addAttribute("inactiveCompanies", inactiveCompanies);
 
         return "management/inactive";
     }
@@ -225,6 +277,19 @@ public class ClientController {
         this.clientService.deleteClientById(clientId);
 
         return "redirect:/clients/pending";
+    }
+
+    @GetMapping("/clients/block/{id}")
+    public String doBlockAccount(@PathVariable("id") Integer clientId, HttpSession session) {
+        // Comprobar que el usuario es gestor
+        UserDTO user = (UserDTO) session.getAttribute("management");
+        if (user == null) {
+            return "redirect:/";
+        }
+
+        this.clientService.block(clientId);
+
+        return "redirect:/clients/inactive";
     }
 
     /*
@@ -358,8 +423,8 @@ public class ClientController {
         Client_AccountDTO accountDTO = this.accountService.getAccountByIdClient(idClient);
 
         if(!accountDTO.getAccountStatusByAccountStatus().getStatus().equals("Active")){
-            url = "redirect:/client?id="+ user.getId();
             model.addAttribute("error", "To be able to make operations, your account must be active.");
+            url = this.doShowClient(model,session, user.getId());
         }else{
             OperationAuxClient operation = new OperationAuxClient();
             operation.setOrigin(accountDTO.getId());
@@ -390,13 +455,25 @@ public class ClientController {
             return "redirect:/";
         }
 
-        if(accountDTO.getBalance() - Double.parseDouble(operationAuxClient.getAmount()) < 0){
+        if(operationAuxClient.getOrigin() == null || operationAuxClient.getDestination() == null ||
+                operationAuxClient.getAmount().equals("") ||
+                operationAuxClient.getPayment().equals("") || operationAuxClient.getAmount().equals("")){
+
+            model.addAttribute("error", "Complete all the fields.");
+            url = this.doMakeATransference(model, accountDTO.getClientByOwner().getId(), session);
+
+        } else if(accountDTO.getBalance() - Double.parseDouble(operationAuxClient.getAmount()) < 0){
             model.addAttribute("error", "Nonpayment.");
             model.addAttribute("user", user);
             url = "client/transference";
+        }else if(Double.parseDouble(operationAuxClient.getAmount()) <= 0){
+            model.addAttribute("error", "The amount must be positive.");
+            url = this.doMakeATransference(model, accountDTO.getClientByOwner().getId(), session);
         }else {
             this.operationService.saveTransference(operationAuxClient);
         }
+
+
         return url;
     }
 
@@ -413,8 +490,8 @@ public class ClientController {
 
 
         if(!accountDTO.getAccountStatusByAccountStatus().getStatus().equals("Active")){
-            url = "redirect:/client?id="+ user.getId();
             model.addAttribute("error", "To be able to make operations, your account must be active.");
+            url = this.doShowClient(model,session, user.getId());
         }else{
             OperationAuxClient operation = new OperationAuxClient();
             operation.setClient(accountDTO.getClientByOwner().getId());
@@ -443,10 +520,20 @@ public class ClientController {
             return "redirect:/";
         }
 
-        if(accountDTO.getBalance() < 0){
+        if(operationAuxClient.getOrigin() == null || operationAuxClient.getDestination() == null ||
+                operationAuxClient.getAmount().equals("") || operationAuxClient.getCurrentChangeOrigin().equals("") ||
+                operationAuxClient.getDestination().equals("") || operationAuxClient.getAmount().equals("")){
+
+            model.addAttribute("error", "Complete all the fields.");
+            url = this.doMakeACurrencyChange(model, accountDTO.getClientByOwner().getId(), session);
+
+        }else if(accountDTO.getBalance() < 0){
             model.addAttribute("error", "Nonpayment.");
             model.addAttribute("user", user);
             url = "client/currencyChange";
+        }else if(Double.parseDouble(operationAuxClient.getAmount()) <= 0){
+            model.addAttribute("error", "The amount must be positive.");
+            url = this.doMakeACurrencyChange(model, accountDTO.getClientByOwner().getId(), session);
         }else {
             this.operationService.saveCurrencyChange(operationAuxClient);
         }
