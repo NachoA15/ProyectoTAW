@@ -358,8 +358,8 @@ public class ClientController {
         Client_AccountDTO accountDTO = this.accountService.getAccountByIdClient(idClient);
 
         if(!accountDTO.getAccountStatusByAccountStatus().getStatus().equals("Active")){
-            url = "redirect:/client?id="+ user.getId();
             model.addAttribute("error", "To be able to make operations, your account must be active.");
+            url = this.doShowClient(model,session, user.getId());
         }else{
             OperationAuxClient operation = new OperationAuxClient();
             operation.setOrigin(accountDTO.getId());
@@ -390,13 +390,25 @@ public class ClientController {
             return "redirect:/";
         }
 
-        if(accountDTO.getBalance() - Double.parseDouble(operationAuxClient.getAmount()) < 0){
+        if(operationAuxClient.getOrigin() == null || operationAuxClient.getDestination() == null ||
+                operationAuxClient.getAmount().equals("") ||
+                operationAuxClient.getPayment().equals("") || operationAuxClient.getAmount().equals("")){
+
+            model.addAttribute("error", "Complete all the fields.");
+            url = this.doMakeATransference(model, accountDTO.getClientByOwner().getId(), session);
+
+        } else if(accountDTO.getBalance() - Double.parseDouble(operationAuxClient.getAmount()) < 0){
             model.addAttribute("error", "Nonpayment.");
             model.addAttribute("user", user);
             url = "client/transference";
+        }else if(Double.parseDouble(operationAuxClient.getAmount()) <= 0){
+            model.addAttribute("error", "The amount must be positive.");
+            url = this.doMakeATransference(model, accountDTO.getClientByOwner().getId(), session);
         }else {
             this.operationService.saveTransference(operationAuxClient);
         }
+
+
         return url;
     }
 
@@ -413,8 +425,8 @@ public class ClientController {
 
 
         if(!accountDTO.getAccountStatusByAccountStatus().getStatus().equals("Active")){
-            url = "redirect:/client?id="+ user.getId();
             model.addAttribute("error", "To be able to make operations, your account must be active.");
+            url = this.doShowClient(model,session, user.getId());
         }else{
             OperationAuxClient operation = new OperationAuxClient();
             operation.setClient(accountDTO.getClientByOwner().getId());
@@ -443,10 +455,20 @@ public class ClientController {
             return "redirect:/";
         }
 
-        if(accountDTO.getBalance() < 0){
+        if(operationAuxClient.getOrigin() == null || operationAuxClient.getDestination() == null ||
+                operationAuxClient.getAmount().equals("") || operationAuxClient.getCurrentChangeOrigin().equals("") ||
+                operationAuxClient.getDestination().equals("") || operationAuxClient.getAmount().equals("")){
+
+            model.addAttribute("error", "Complete all the fields.");
+            url = this.doMakeACurrencyChange(model, accountDTO.getClientByOwner().getId(), session);
+
+        }else if(accountDTO.getBalance() < 0){
             model.addAttribute("error", "Nonpayment.");
             model.addAttribute("user", user);
             url = "client/currencyChange";
+        }else if(Double.parseDouble(operationAuxClient.getAmount()) <= 0){
+            model.addAttribute("error", "The amount must be positive.");
+            url = this.doMakeACurrencyChange(model, accountDTO.getClientByOwner().getId(), session);
         }else {
             this.operationService.saveCurrencyChange(operationAuxClient);
         }
