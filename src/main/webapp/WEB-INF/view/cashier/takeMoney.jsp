@@ -2,8 +2,6 @@
 <%@ page import="es.uma.proyectotaw.dto.client.Client_ClientDTO" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%-- Author: Manuel Jesús Jerez Sánchez --%>
-
 <%--
   Created by IntelliJ IDEA.
   User: manuj
@@ -11,6 +9,9 @@
   Time: 18:59
   To change this template use File | Settings | File Templates.
 --%>
+
+<%-- Author: Manuel Jesús Jerez --%>
+
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
     Client_ClientDTO client = (Client_ClientDTO) request.getAttribute("client");

@@ -154,6 +154,10 @@ public class OperationService{
     /**
      * @author: Manuel Jesús Jerez
      */
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8b78b2e1510975e3dfb5f9549cfd12bc1df6ca38
     public void saveTakeMoney(OperationAuxClient operationAuxClient){
         OperationEntity operation = new OperationEntity();
         AccountEntity account = this.accountRepository.findById(operationAuxClient.getOrigin()).orElse(null);
