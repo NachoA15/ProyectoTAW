@@ -1,6 +1,3 @@
-
-
-
 package es.uma.proyectotaw.controller;
 
 import es.uma.proyectotaw.dao.*;
@@ -21,6 +18,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * @author: Martin Pur
+ */
 @Controller
 public class CompanyController {
 

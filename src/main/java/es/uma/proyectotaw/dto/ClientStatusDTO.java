@@ -1,7 +1,7 @@
 package es.uma.proyectotaw.dto;
 
 /**
- * @author Ignacio Alba
+ * @author Ignacio Alba - Gestor
  */
 public class ClientStatusDTO {
     private int id;

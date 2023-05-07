@@ -12,6 +12,10 @@ import java.util.List;
  * @author: Marina Sayago - Cliente
  */
 public interface RoleUserRepository extends JpaRepository<RoleUserEntity, Integer> {
+
+    /**
+     * @author: Marina Sayago - Cliente
+     */
     @Query("select r from RoleUserEntity r where r.role = :role")
     public RoleUserEntity getRoleUserByRole(@Param("role") String role);
 

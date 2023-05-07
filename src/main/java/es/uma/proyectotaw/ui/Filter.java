@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author Ignacio Alba
+ * @author Ignacio Alba - Gestor
  */
 public class Filter {
     private String text;

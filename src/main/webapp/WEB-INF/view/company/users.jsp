@@ -8,6 +8,11 @@
 <%@ page import="es.uma.proyectotaw.entity.UserEntity" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
+    /**
+     * @author: Martin Pur
+     */
+%>
+<%
     CompanyEntity company = (CompanyEntity) request.getAttribute("company");
     List<PersonEntity> companyUsers = (List<PersonEntity>) request.getAttribute("companyUsers");
     UserEntity companyUser = (UserEntity) request.getAttribute("companyUser");

@@ -3,6 +3,9 @@ package es.uma.proyectotaw.ui;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 
+/**
+ * @author: Marina Sayago - Cliente
+ */
 public class SignUp {
     private String email;
     private String password;

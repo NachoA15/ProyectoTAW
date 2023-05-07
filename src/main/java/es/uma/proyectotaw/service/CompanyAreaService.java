@@ -15,22 +15,37 @@ import java.util.List;
 @Service
 public class CompanyAreaService {
 
+    /*
+        =================================================================================================
+            GESTOR  -- Autor: Ignacio Alba
+        =================================================================================================
+     */
+
     // Esta lista siempre se actualiza cuando se obtienen todas las areas del repositorio
     private List<CompanyAreaEntity> companyAreas;
 
     @Autowired
     protected CompanyAreaRepository companyAreaRepository;
 
+    /**
+     * @author: Ignacio Alba
+     */
     public List<CompanyAreaDTO> listCompanyAreas() {
         List<CompanyAreaEntity> companyAreas = this.companyAreaRepository.findAll();
         this.companyAreas = companyAreas;
         return this.listCompanyAreasToDTO(companyAreas);
     }
 
+    /**
+     * @author: Ignacio Alba
+     */
     public List<String> listAreasOnStrings() {
         return this.listCompanyAreasToStrings(this.companyAreas);
     }
 
+    /**
+     * @author: Ignacio Alba
+     */
     private List<String> listCompanyAreasToStrings(List<CompanyAreaEntity> list) {
         List<String> strings = new ArrayList<>();
 
@@ -39,6 +54,9 @@ public class CompanyAreaService {
         return strings;
     }
 
+    /**
+     * @author: Ignacio Alba
+     */
     private List<CompanyAreaDTO> listCompanyAreasToDTO(List<CompanyAreaEntity> list) {
         List<CompanyAreaDTO> companyAreaDTOS = new ArrayList<>();
 
@@ -46,4 +64,10 @@ public class CompanyAreaService {
 
         return companyAreaDTOS;
     }
+
+    /*
+        =================================================================================================
+            FIN GESTOR  -- Autor: Ignacio Alba
+        =================================================================================================
+     */
 }

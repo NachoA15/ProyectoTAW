@@ -2,6 +2,9 @@ package es.uma.proyectotaw.ui;
 
 import es.uma.proyectotaw.entity.AccountEntity;
 
+/**
+ * @author: Martin Pur - Empresa
+ */
 public class OperationAuxCompany {
     private AccountEntity origin;
     private AccountEntity destination;

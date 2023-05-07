@@ -8,7 +8,6 @@ import es.uma.proyectotaw.dto.client.Client_ClientDTO;
 import es.uma.proyectotaw.dto.client.Client_OperationDTO;
 import es.uma.proyectotaw.dto.client.Client_PersonDTO;
 import es.uma.proyectotaw.dto.management.*;
-import es.uma.proyectotaw.entity.UserEntity;
 import es.uma.proyectotaw.service.*;
 import es.uma.proyectotaw.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,10 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author: Ignacio Alba
+ * @author: Marina Sayago
+ */
 @Controller
 public class ClientController {
 
@@ -60,7 +63,7 @@ public class ClientController {
         =================================================================================================
      */
 
-    private String[] orderCriteria = {"Amount"};
+    private String[] orderCriteria = {"Amount", "Date"};
 
     @GetMapping("/clients")
     public String doShowClients(Model model, HttpSession session) {
@@ -185,33 +188,42 @@ public class ClientController {
 
         List<OperationDTO> operations;
 
-        if (filter == null || (filter.getOrigin().isEmpty() && filter.getDestination().isEmpty())) {
-            filter = new FilterOperationsManagement();
-            if (clientType.equals("person")) {
-                PartialPersonDTO person = this.personService.getPartialPersonById(id);
-                operations = this.operationService.getOperations(person.getClient());
-                model.addAttribute("person", person);
-            } else {
-                PartialCompanyDTO company = this.companyService.getPartialCompanyById(id);
-                operations = this.operationService.getOperations(company.getClient());
-                model.addAttribute("company", company);
-            }
+        PartialPersonDTO person = null;
+        PartialCompanyDTO company = null;
+        if (clientType.equals("person")) {
+            person = this.personService.getPartialPersonById(id);
+            model.addAttribute("person", person);
         } else {
-            if (clientType.equals("person")) {
-                PartialPersonDTO person = this.personService.getPartialPersonById(id);
-                operations = this.operationService.getOperationsByText(person.getClient(), filter.getOrigin(), filter.getDestination(), filter.getOrder());
-                model.addAttribute("person", person);
+            company = this.companyService.getPartialCompanyById(id);
+            model.addAttribute("company", company);
+        }
+
+        PartialClientDTO client = person == null? company.getClient() : person.getClient();
+
+        if (filter == null || (filter.getOrigin().isEmpty() && filter.getDestination().isEmpty())) {
+
+            if (filter == null) filter = new FilterOperationsManagement();
+
+            if (filter.getOrder() == null || filter.getOrder().isEmpty()) {
+                operations = this.operationService.getOperations(client);
+            } else if (filter.getOrder().equals("Amount")) {
+                operations = this.operationService.getOperationsOrderedByAmount(client);
             } else {
-                PartialCompanyDTO company = this.companyService.getPartialCompanyById(id);
-                operations = this.operationService.getOperationsByText(company.getClient(), filter.getOrigin(), filter.getDestination(), filter.getOrder());
-                model.addAttribute("company", company);
+                operations = this.operationService.getOperationsOrderedByDate(client);
+            }
+
+        } else {
+            if (filter.getOrder() == null || filter.getOrder().isEmpty()) {
+                operations = this.operationService.getOperationsByText(client, filter.getOrigin(), filter.getDestination());
+            } else if (filter.getOrder().equals("Amount")) {
+                operations = this.operationService.getOperationsByTextOrderedByAmount(client, filter.getOrigin(), filter.getDestination());
+            } else {
+                operations = this.operationService.getOperationsByTextOrderedByDate(client, filter.getOrigin(), filter.getDestination());
             }
         }
 
         model.addAttribute("filter", filter);
         model.addAttribute("operations", operations);
-
-
         model.addAttribute("orderCriteria", orderCriteria);
 
         return "management/operations";
@@ -249,6 +261,23 @@ public class ClientController {
         model.addAttribute("inactiveCompanies", inactiveCompanies);
 
         return "management/inactive";
+    }
+
+    @GetMapping("clients/suspicious")
+    public String doShowSuspiciousClients(Model model, HttpSession session) {
+        // Comprobar que el usuario es gestor
+        UserDTO user = (UserDTO) session.getAttribute("management");
+        if (user == null) {
+            return "redirect:/";
+        }
+
+        List<PartialPersonDTO> suspiciousPersons = this.personService.getSuspiciousPersons();
+        List<PartialCompanyDTO> suspiciousCompanies = this.companyService.getSuspiciousCompanies();
+
+        model.addAttribute("suspiciousPersons", suspiciousPersons);
+        model.addAttribute("suspiciousCompanies", suspiciousCompanies);
+
+        return "management/suspicious";
     }
 
     @GetMapping("clients/confirm/{id}")
@@ -290,6 +319,19 @@ public class ClientController {
         this.clientService.block(clientId);
 
         return "redirect:/clients/inactive";
+    }
+
+    @GetMapping("/clients/suspicious/block/{id}")
+    public String doBlockSuspicious(@PathVariable("id") Integer clientId, HttpSession session) {
+        // Comprobar que el usuario es gestor
+        UserDTO user = (UserDTO) session.getAttribute("management");
+        if (user == null) {
+            return "redirect:/";
+        }
+
+        this.clientService.block(clientId);
+
+        return "redirect:/clients/suspicious";
     }
 
     /*

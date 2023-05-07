@@ -3,6 +3,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
+    /**
+     * @author: Martin Pur
+     */
+%>
+<%
     CompanyEntity company = (CompanyEntity) request.getAttribute("company");
 %>
 <html>

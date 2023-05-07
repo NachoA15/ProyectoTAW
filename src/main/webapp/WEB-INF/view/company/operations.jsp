@@ -5,6 +5,11 @@
 <%@ page import="es.uma.proyectotaw.entity.OperationEntity" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
+    /**
+     * @author: Martin Pur
+     */
+%>
+<%
     CompanyEntity company = (CompanyEntity) request.getAttribute("company");
     List<OperationEntity> companyOperations = (List<OperationEntity>) request.getAttribute("companyOperations");
 %>

@@ -3,7 +3,7 @@ package es.uma.proyectotaw.dto.client;
 import java.io.Serializable;
 
 /**
- * @author: Marina Sayago
+ * @author: Marina Sayago - Cliente
  */
 public class CurrencyChangeDTO implements Serializable{
     private int id;

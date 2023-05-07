@@ -1,5 +1,8 @@
 package es.uma.proyectotaw.ui;
 
+/**
+ * @author: Marina Sayago - Cliente
+ */
 public class OperationAuxClient {
 
     private Integer client;

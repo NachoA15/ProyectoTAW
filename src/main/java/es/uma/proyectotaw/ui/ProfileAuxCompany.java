@@ -2,6 +2,9 @@ package es.uma.proyectotaw.ui;
 
 import java.sql.Date;
 
+/**
+ * @author: Martin Pur - Empresa
+ */
 public class ProfileAuxCompany {
 
     private int idClient;

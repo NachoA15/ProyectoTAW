@@ -35,13 +35,13 @@ public class AccountEntity {
     @Column(name = "currency", nullable = false, length = 45)
     private String currency;
     @Basic
-    @Column(name = "opening_date", nullable = false)
+    @Column(name = "opening_date", nullable = true)
     private Date openingDate;
     @ManyToOne
     @JoinColumn(name = "account_status", referencedColumnName = "id", nullable = false)
     private AccountStatusEntity accountStatusByAccountStatus;
     @OneToOne
-    @JoinColumn(name = "owner", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "owner", referencedColumnName = "id", nullable = true)
     private ClientEntity clientByOwner;
     @OneToMany(mappedBy = "accountByOrigin")
     private Collection<OperationEntity> operationsById;
@@ -138,6 +138,7 @@ public class AccountEntity {
      */
     public PartialAccountDTO toPartialDTO() {
         PartialAccountDTO dto = new PartialAccountDTO();
+        dto.setId(this.id);
         dto.setIban(this.iban);
         dto.setStatus(this.accountStatusByAccountStatus.getState());
         return dto;
@@ -169,7 +170,7 @@ public class AccountEntity {
         dto.setCurrency(getCurrency());
         dto.setOpeningDate(getOpeningDate());
         dto.setAccountStatusByAccountStatus(getAccountStatusByAccountStatus().toDTO());
-        dto.setClientByOwner(getClientByOwner().toClientDTO());
+        if (this.getClientByOwner() != null) dto.setClientByOwner(getClientByOwner().toClientDTO());
 
         return dto;
     }

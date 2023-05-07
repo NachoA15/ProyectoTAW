@@ -6,7 +6,6 @@ import es.uma.proyectotaw.dto.UserDTO;
 import es.uma.proyectotaw.entity.UserEntity;
 import es.uma.proyectotaw.service.ChatService;
 import es.uma.proyectotaw.ui.FilterChats;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

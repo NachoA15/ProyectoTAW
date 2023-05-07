@@ -88,13 +88,16 @@
     <table border="1px">
         <thead>
         <tr style="text-align: center">
-            <td><b>Name</b></td>
-            <td><b>Area</b></td>
-            <td><b>Phone</b></td>
-            <td><b>City</b></td>
-            <td><b>Country</b></td>
-            <td><b>Client number</b></td>
-            <td><b>Status</b></td>
+            <th><b>Name</b></th>
+            <th><b>Area</b></th>
+            <th><b>Phone</b></th>
+            <th><b>City</b></th>
+            <th><b>Country</b></th>
+            <th><b>Client number</b></th>
+            <th><b>Status</b></th>
+            <th></th>
+            <th></th>
+            <th></th>
         </tr>
         </thead>
         <tbody>

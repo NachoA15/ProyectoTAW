@@ -3,7 +3,7 @@ package es.uma.proyectotaw.dto.management;
 import es.uma.proyectotaw.dto.AddressDTO;
 
 /**
- * @author Ignacio Alba
+ * @author Ignacio Alba - Gestor
  */
 public class FullClientDTO {
     private int id;

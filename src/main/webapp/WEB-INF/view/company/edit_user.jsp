@@ -2,6 +2,11 @@
 <%@ page import="es.uma.proyectotaw.entity.PersonEntity" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
+    /**
+     * @author: Martin Pur
+     */
+%>
+<%
     PersonEntity companyUser = (PersonEntity) request.getAttribute("companyUser");
 %>
 <html>

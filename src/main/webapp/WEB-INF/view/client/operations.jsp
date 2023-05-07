@@ -10,6 +10,11 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
+    /**
+     * @author: Marina Sayago
+     */
+%>
+<%
     List<Client_OperationDTO> listOperations = (List<Client_OperationDTO>) request.getAttribute("operations");
     UserDTO userDTO = (UserDTO) request.getAttribute("user");
 %>

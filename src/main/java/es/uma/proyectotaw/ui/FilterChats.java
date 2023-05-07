@@ -1,7 +1,7 @@
 package es.uma.proyectotaw.ui;
 
 /**
- * @author: Iván Delgado
+ * @author: Iván Delgado - Asistente
  */
 public class FilterChats {
 

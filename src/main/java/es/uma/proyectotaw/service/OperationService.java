@@ -31,6 +31,12 @@ public class OperationService{
     @Autowired
     protected CurrencyChangeRespository currencyChangeRespository;
 
+    /*
+        =================================================================================================
+            GESTOR  -- Autor: Ignacio Alba
+        =================================================================================================
+     */
+
     /**
      * @author: Ignacio Alba
      */
@@ -42,8 +48,40 @@ public class OperationService{
     /**
      * @author: Ignacio Alba
      */
-    public List<OperationDTO> getOperationsByText(PartialClientDTO client, String origin, String destination, String order) {
+    public List<OperationDTO> getOperationsOrderedByAmount(PartialClientDTO client) {
+        List<OperationEntity> operations = this.operationRepository.getOperationsByMyAccountOrderByAmount(client.getAccount().getId());
+        return this.listOperationsToManagementOperationDTO(operations);
+    }
+
+    /**
+     * @author: Ignacio Alba
+     */
+    public List<OperationDTO> getOperationsOrderedByDate(PartialClientDTO client) {
+        List<OperationEntity> operations = this.operationRepository.getOperationsByMyAccountOrderByDate(client.getAccount().getId());
+        return this.listOperationsToManagementOperationDTO(operations);
+    }
+
+    /**
+     * @author: Ignacio Alba
+     */
+    public List<OperationDTO> getOperationsByText(PartialClientDTO client, String origin, String destination) {
         List<OperationEntity> operations = this.operationRepository.getOperationsByText(client.getAccount().getId(), origin, destination);
+        return this.listOperationsToManagementOperationDTO(operations);
+    }
+
+    /**
+     * @author: Ignacio Alba
+     */
+    public List<OperationDTO> getOperationsByTextOrderedByAmount(PartialClientDTO client, String origin, String destination) {
+        List<OperationEntity> operations = this.operationRepository.getOperationsByTextOrderByAmount(client.getAccount().getId(), origin, destination);
+        return this.listOperationsToManagementOperationDTO(operations);
+    }
+
+    /**
+     * @author: Ignacio Alba
+     */
+    public List<OperationDTO> getOperationsByTextOrderedByDate(PartialClientDTO client, String origin, String destination) {
+        List<OperationEntity> operations = this.operationRepository.getOperationsByTextOrderByDate(client.getAccount().getId(), origin, destination);
         return this.listOperationsToManagementOperationDTO(operations);
     }
 
@@ -55,6 +93,18 @@ public class OperationService{
         list.forEach((final OperationEntity op) -> dtos.add(op.toManagementDTO()));
         return dtos;
     }
+
+    /*
+        =================================================================================================
+            FIN GESTOR  -- Autor: Ignacio Alba
+        =================================================================================================
+     */
+
+    /*
+        =================================================================================================
+            CLIENTE  -- Autora: Marina Sayago
+        =================================================================================================
+     */
 
     /**
      * @author: Marina Sayago
@@ -151,13 +201,21 @@ public class OperationService{
         this.operationRepository.save(operation);
     }
 
+    /*
+        =================================================================================================
+            FIN CLIENTE  -- Autora: Marina Sayago
+        =================================================================================================
+     */
+
+    /*
+        =================================================================================================
+            CAJERO -- Autor: Manuel Jesús Jerez
+        =================================================================================================
+     */
+
     /**
      * @author: Manuel Jesús Jerez
      */
-<<<<<<< HEAD
-=======
-
->>>>>>> 8b78b2e1510975e3dfb5f9549cfd12bc1df6ca38
     public void saveTakeMoney(OperationAuxClient operationAuxClient){
         OperationEntity operation = new OperationEntity();
         AccountEntity account = this.accountRepository.findById(operationAuxClient.getOrigin()).orElse(null);
@@ -191,4 +249,10 @@ public class OperationService{
 
         this.operationRepository.save(operation);
     }
+
+    /*
+        =================================================================================================
+            FIN CAJERO -- Autor: Manuel Jesús Jerez
+        =================================================================================================
+     */
 }

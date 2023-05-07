@@ -28,12 +28,23 @@ public class AccountService {
         return account.clientToAccountDTO();
     }
 
+    /*
+        =================================================================================================
+            CLIENTE  -- Autora: Marina Sayago
+        =================================================================================================
+     */
+
+    /**
+     * @author: Marina Sayago
+     */
     public List<Client_AccountDTO> getAccount(){
         List<AccountEntity> listAccounts = this.accountRepository.findAll();
         return this.listaEntidadesADTO(listAccounts);
     }
 
-
+    /**
+     * @author: Marina Sayago
+     */
     protected List<Client_AccountDTO> listaEntidadesADTO (List<AccountEntity> lista) {
         ArrayList dtos = new ArrayList<Client_AccountDTO>();
 
@@ -42,12 +53,18 @@ public class AccountService {
         return dtos;
     }
 
+    /**
+     * @author: Marina Sayago
+     */
     public List<Client_AccountDTO> getAccountWithoutMe(Integer idClient){
         List<AccountEntity> listAccounts = this.accountRepository.getAccountWithoutMe(idClient);
 
         return this.listaEntidadesADTO(listAccounts);
     }
 
+    /**
+     * @author: Marina Sayago
+     */
     public void saveActivation(Integer idAccount){
         AccountEntity account = this.accountRepository.findById(idAccount).orElse(null);
         AccountStatusEntity accountStatus = this.accountStatusRepository.findByState("Pending");
@@ -55,4 +72,10 @@ public class AccountService {
 
         this.accountRepository.save(account);
     }
+
+    /*
+        =================================================================================================
+            FIN CLIENTE  -- Autora: Marina Sayago
+        =================================================================================================
+     */
 }

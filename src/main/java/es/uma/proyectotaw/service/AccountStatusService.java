@@ -15,22 +15,37 @@ import java.util.List;
 @Service
 public class AccountStatusService {
 
+    /*
+        =================================================================================================
+            GESTOR  -- Autor: Ignacio Alba
+        =================================================================================================
+     */
+
     // Esta lista siempre se actualiza cuando se obtienen todos los status del repositorio
     private List<AccountStatusEntity> accountStatuses;
 
     @Autowired
     protected AccountStatusRepository accountStatusRepository;
 
+    /**
+     * @author: Ignacio Alba
+     */
     public List<AccountStatusDTO> listAccountStatuses() {
         List<AccountStatusEntity> accountStatuses = this.accountStatusRepository.findAll();
         this.accountStatuses = accountStatuses;
         return this.listAccountStatusesToDTO(accountStatuses);
     }
 
+    /**
+     * @author: Ignacio Alba
+     */
     public List<String> listStatusesOnStrings() {
         return this.listAccountStatusesToStrings(this.accountStatuses);
     }
 
+    /**
+     * @author: Ignacio Alba
+     */
     private List<String> listAccountStatusesToStrings(List<AccountStatusEntity> list) {
         List<String> strings = new ArrayList<>();
 
@@ -39,6 +54,9 @@ public class AccountStatusService {
         return strings;
     }
 
+    /**
+     * @author: Ignacio Alba
+     */
     private List<AccountStatusDTO> listAccountStatusesToDTO(List<AccountStatusEntity> list) {
         List<AccountStatusDTO> accountStatusDTOS = new ArrayList<>();
 
@@ -46,4 +64,10 @@ public class AccountStatusService {
 
         return accountStatusDTOS;
     }
+
+    /*
+        =================================================================================================
+            FIN GESTOR  -- Autor: Ignacio Alba
+        =================================================================================================
+     */
 }

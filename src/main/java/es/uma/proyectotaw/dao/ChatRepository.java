@@ -14,20 +14,36 @@ public interface ChatRepository extends JpaRepository<ChatEntity, Integer> {
         ASISTENTE  -- Autor: Iván Delgado
     =================================================================================================
     */
+
+    /**
+     * @author: Iván Delgado - Asistente
+     */
     @Query("select c from ChatEntity c where c.userByAssistant.id = :assistant order by c.personByClient.name, c.chatStateByChatState.id")
     public List<ChatEntity> getChats(@Param("assistant") int assistant);
 
+    /**
+     * @author: Iván Delgado - Asistente
+     */
     @Query("select c from ChatEntity c where c.personByClient.id = :client and c.chatStateByChatState.state = 'open'")
     public ChatEntity getClientChat(@Param("client") int client);
 
+    /**
+     * @author: Iván Delgado - Asistente
+     */
     @Query("select c from ChatEntity c where c.userByAssistant.id = :assistant and c.chatStateByChatState.state = :status order by c.personByClient.name")
     public List<ChatEntity> getChatsByStatus(@Param("assistant") int assistant, @Param("status") String status);
 
+    /**
+     * @author: Iván Delgado - Asistente
+     */
     @Query("select c from ChatEntity c where (upper(c.personByClient.name) like upper(concat('%', :text, '%')) " +
             "or upper(c.personByClient.surname) like upper(concat('%', :text, '%')))" +
             " and c.userByAssistant.id = :assistant")
     public List<ChatEntity> getChatsByText(@Param("assistant") int assistant, @Param("text") String text);
 
+    /**
+     * @author: Iván Delgado - Asistente
+     */
     @Query("select c from ChatEntity c where c.userByAssistant.id = :assistant and" +
             "(upper(c.personByClient.name) like upper(concat('%', :text, '%'))" +
             "or upper(c.personByClient.surname) like upper(concat('%', :text, '%')))" +

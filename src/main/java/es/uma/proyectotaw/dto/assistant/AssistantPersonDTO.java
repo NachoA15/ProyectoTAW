@@ -1,7 +1,7 @@
 package es.uma.proyectotaw.dto.assistant;
 
 /**
- * @author: Iván Delgado
+ * @author: Iván Delgado - Asistente
  */
 public class AssistantPersonDTO {
 

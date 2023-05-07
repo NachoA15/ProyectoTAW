@@ -5,6 +5,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
+/**
+ * @author: Martin Pur - Empresa
+ */
 public class FilterCompanyUsers {
     public FilterCompanyUsers() {
         this.name = "";

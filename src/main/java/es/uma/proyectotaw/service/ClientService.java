@@ -48,11 +48,17 @@ public class ClientService {
     =================================================================================================
     */
 
+    /**
+     * @author: Ignacio Alba
+     */
     public FullClientDTO getClientById(Integer id) {
         ClientEntity client = this.clientRepository.findById(id).orElse(null);
         return client.toFullDTO();
     }
 
+    /**
+     * @author: Ignacio Alba
+     */
     public void registerClientByID(Integer id) {
         ClientEntity client = this.clientRepository.findById(id).orElse(null);
 
@@ -76,6 +82,9 @@ public class ClientService {
         }
     }
 
+    /**
+     * @author: Ignacio Alba
+     */
     public void deleteClientById(Integer id) {
         ClientEntity client = this.clientRepository.findById(id).orElse(null);
 
@@ -98,6 +107,23 @@ public class ClientService {
         }
     }
 
+    /**
+     * @author: Ignacio Alba
+     */
+    public void block(Integer id) {
+        ClientEntity client = this.clientRepository.findById(id).orElse(null);
+        ClientStatusEntity clientStatus = this.clientStatusRepository.findByState("Blocked");
+        AccountStatusEntity accountStatus = this.accountStatusRepository.findByState("Blocked");
+
+        client.setClientStatusByStatus(clientStatus);
+        client.getAccountById().setAccountStatusByAccountStatus(accountStatus);
+
+        this.clientRepository.save(client);
+    }
+
+    /**
+     * @author: Ignacio Alba
+     */
     private String generateIBAN(String s1, String s2) {
         String IBAN = "ES" + s1.hashCode() + s2.hashCode();
         if (IBAN.length() >= 24) {
@@ -112,12 +138,24 @@ public class ClientService {
     =================================================================================================
     */
 
+    /*
+    =================================================================================================
+        CLIENTE  -- Autora: Marina Sayago
+    =================================================================================================
+    */
+
+    /**
+     * @author: Marina Sayago
+     */
     public Client_ClientDTO getClient(Integer idClient){
         ClientEntity client = this.clientRepository.findById(idClient).orElse(null);
 
         return client.toClientDTO();
     }
 
+    /**
+     * @author: Marina Sayago
+     */
     public ProfileAuxClient getProfileAux(Integer idClient){
         ProfileAuxClient profileAuxClient = new ProfileAuxClient();
         ClientEntity client = this.clientRepository.findById(idClient).orElse(null);
@@ -138,6 +176,9 @@ public class ClientService {
         return profileAuxClient;
     }
 
+    /**
+     * @author: Marina Sayago
+     */
     public void saveClient(ProfileAuxClient profileAuxClient) throws ParseException {
         ClientEntity client = this.clientRepository.findById(profileAuxClient.getIdClient()).orElse(null);
         PersonEntity person = this.personRepository.getPersonByPersonClient(profileAuxClient.getIdClient());
@@ -165,7 +206,12 @@ public class ClientService {
 
 
         this.clientRepository.save(client);
-
     }
+
+    /*
+    =================================================================================================
+        FIN CLIENTE  -- Autora: Marina Sayago
+    =================================================================================================
+    */
 
 }

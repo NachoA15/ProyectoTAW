@@ -11,6 +11,9 @@ public class PaymentService {
     @Autowired
     protected PaymentRepository paymentRepository;
 
+    /**
+     * @author: Marina Sayago - Cliente
+     */
     public List<String> getPayment(){
         List<String> listPayment = this.paymentRepository.getPayment();
 

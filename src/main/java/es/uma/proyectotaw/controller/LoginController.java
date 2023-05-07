@@ -1,20 +1,11 @@
 package es.uma.proyectotaw.controller;
 
-
-import es.uma.proyectotaw.dao.CompanyRepository;
-import es.uma.proyectotaw.dao.PersonRepository;
 import es.uma.proyectotaw.dao.UserRepository;
 import es.uma.proyectotaw.dto.UserDTO;
-import es.uma.proyectotaw.dto.client.Client_ClientDTO;
-import es.uma.proyectotaw.dto.client.Client_PersonDTO;
-import es.uma.proyectotaw.entity.CompanyEntity;
-import es.uma.proyectotaw.entity.PersonEntity;
 import es.uma.proyectotaw.entity.UserEntity;
-import es.uma.proyectotaw.service.ClientService;
 import es.uma.proyectotaw.service.PersonService;
 import es.uma.proyectotaw.service.UserService;
 import es.uma.proyectotaw.ui.SignUp;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,9 +32,6 @@ public class LoginController {
         return "login";
     }
 
-    /**
-     * @author: Ignacio Alba
-     */
     @PostMapping("/")
     public String doAuthenticate(@RequestParam("email") String email,
                                  @RequestParam("password") String password,
@@ -97,6 +85,9 @@ public class LoginController {
         return "signUp";
     }
 
+    /**
+     * @author: Marina Sayago
+     */
     @PostMapping("/signUpSave")
     public String doSaveSignUp(@ModelAttribute("signUp") SignUp signUp, Model model) throws ParseException {
         String urlTo = "login";

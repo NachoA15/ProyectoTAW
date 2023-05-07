@@ -11,6 +11,9 @@ public class CurrencyChangeService {
     @Autowired
     protected CurrencyChangeRespository currencyChangeRespository;
 
+    /**
+     * @author: Marina Sayago - Cliente
+     */
     public List<String> getCurrencyChange(){
         List<String> listCurrency = this.currencyChangeRespository.getCurrencyChangeByOrigin();
 

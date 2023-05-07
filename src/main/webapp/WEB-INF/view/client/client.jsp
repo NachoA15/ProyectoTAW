@@ -11,6 +11,11 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
+    /**
+     * @author: Marina Sayago
+     */
+%>
+<%
     Client_PersonDTO client = (Client_PersonDTO) request.getAttribute("client");
     Client_AccountDTO account = (Client_AccountDTO) request.getAttribute("account");
 %>

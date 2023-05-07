@@ -18,7 +18,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     /**
      * @author Iván Delgado - Asistente
      */
-    @Query("select u from UserEntity u where u.roleUserByRole.role = 'assistant' order by u.chatsById.size")
+    @Query("select u from UserEntity u where u.roleUserByRole.role = 'assistant' order by u.chatsById.size desc")
     public List<UserEntity> getAssistants();
 
     /**

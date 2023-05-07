@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.sql.Date;
 
 /**
- * @author: Marina Sayago
+ * @author: Marina Sayago - Cliente
  */
 public class Client_AccountDTO implements Serializable {
     private int id;

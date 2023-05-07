@@ -3,7 +3,7 @@ package es.uma.proyectotaw.dto.management;
 import java.util.List;
 
 /**
- * @author Ignacio Alba
+ * @author Ignacio Alba - Gestor
  */
 public class FullCompanyDTO {
     private int id;

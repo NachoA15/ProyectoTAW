@@ -1,7 +1,7 @@
 package es.uma.proyectotaw.dto.management;
 
 /**
- * @author Ignacio Alba
+ * @author Ignacio Alba - Gestor
  */
 public class PartialClientDTO {
     private int id;

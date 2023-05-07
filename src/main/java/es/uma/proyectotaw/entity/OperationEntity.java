@@ -111,14 +111,15 @@ public class OperationEntity {
     /**
      * @author: Ignacio Alba
      */
-    public OperationDTO ManagementToDTO() {
+    public OperationDTO toManagementDTO() {
         OperationDTO dto = new OperationDTO();
         dto.setId(this.id);
         dto.setOrigin(this.accountByOrigin.toPartialDTO());
         dto.setDestination(this.accountByDestination.toPartialDTO());
         dto.setDate(this.date);
         dto.setAmount(this.amount);
-        dto.setCurrency(this.paymentByPayment.getCurrency());
+        if (this.currencyChangeByCurrencyChange != null) dto.setCurrency(this.currencyChangeByCurrencyChange.toDTO());
+        if (this.paymentByPayment != null) dto.setPayment(this.paymentByPayment.getCurrency());
         return dto;
     }
 

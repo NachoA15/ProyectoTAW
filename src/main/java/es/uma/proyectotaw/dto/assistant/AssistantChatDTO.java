@@ -3,7 +3,7 @@ package es.uma.proyectotaw.dto.assistant;
 import java.util.List;
 
 /**
- * @author: Iván Delgado
+ * @author: Iván Delgado - Asistente
  */
 public class AssistantChatDTO {
 

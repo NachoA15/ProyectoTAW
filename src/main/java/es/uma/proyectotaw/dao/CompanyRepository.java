@@ -1,9 +1,6 @@
 package es.uma.proyectotaw.dao;
 
-import es.uma.proyectotaw.entity.AccountStatusEntity;
-import es.uma.proyectotaw.entity.ClientStatusEntity;
-import es.uma.proyectotaw.entity.CompanyAreaEntity;
-import es.uma.proyectotaw.entity.CompanyEntity;
+import es.uma.proyectotaw.entity.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -29,6 +26,31 @@ public interface CompanyRepository extends JpaRepository<CompanyEntity,Integer> 
      */
     @Query("select c from CompanyEntity c where c.clientByCompanyClient.clientStatusByStatus.status like 'Pending'")
     public List<CompanyEntity> getPendingCompanies();
+
+    /**
+     * @author Ignacio Alba
+     */
+    @Query("select c from CompanyEntity c where c.clientByCompanyClient.clientStatusByStatus.status not like 'Blocked' " +
+            "and ((c.clientByCompanyClient.id in (" +
+            "select o.accountByOrigin.clientByOwner.id from OperationEntity o where FUNCTION('DATEDIFF',current_date,o.date) > 30 " +
+            "and ((o.accountByOrigin.id, o.date) in (select op.accountByOrigin.id, max(op.date) from OperationEntity op group by op.accountByOrigin.id)) " +
+            "group by o.accountByOrigin.clientByOwner.id)) " +
+            "or " +
+            "(c.clientByCompanyClient.id in (" +
+            "select a.clientByOwner.id from AccountEntity a where FUNCTION('DATEDIFF',current_date,a.openingDate) > 30 " +
+            "and a.id not in (select o.accountByOrigin.id from OperationEntity o group by o.accountByOrigin.id))))")
+    public List<CompanyEntity> getInactiveCompanies();
+
+    /**
+     * @author: Ignacio Alba
+     */
+    @Query("select c from CompanyEntity c where c.clientByCompanyClient.accountById.id in (" +
+            "select distinct o.accountByOrigin.id from OperationEntity o where o.accountByOrigin.accountStatusByAccountStatus.state like 'Suspicious'" +
+            "or o.accountByDestination.accountStatusByAccountStatus.state like 'Suspicious') " +
+            "or c.clientByCompanyClient.accountById.id in (" +
+            "select distinct o.accountByOrigin.id from OperationEntity o where o.accountByOrigin.accountStatusByAccountStatus.state like 'Suspicious'" +
+            "or o.accountByDestination.accountStatusByAccountStatus.state like 'Suspicious')")
+    public List<CompanyEntity> getSuspiciousCompanies();
 
     /**
      * @author: Ignacio Alba

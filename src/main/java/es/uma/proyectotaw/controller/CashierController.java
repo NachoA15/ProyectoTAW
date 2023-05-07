@@ -8,7 +8,6 @@ import es.uma.proyectotaw.service.*;
 import es.uma.proyectotaw.ui.FilterOperationsClient;
 import es.uma.proyectotaw.ui.OperationAuxClient;
 import es.uma.proyectotaw.ui.ProfileAuxClient;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,6 +34,12 @@ public class CashierController {
     protected PaymentService paymentService;
     @Autowired
     protected ClientService clientService;
+
+    /*
+    =================================================================================================
+        CAJERO  -- Autor: Manuel Jesús Jerez
+    =================================================================================================
+    */
 
     @GetMapping("/atm/{id}")
     public String doGoATM(@PathVariable("id") Integer idClient, Model model, HttpSession session){
@@ -149,8 +154,8 @@ public class CashierController {
             return "redirect:/";
         }
 
-        Client_AccountDTO account = this.accountService.getAccountByIdClient(operation.getOrigin());
-        Client_ClientDTO client = this.clientService.getClient(operation.getOrigin());
+        Client_AccountDTO account = this.accountService.getAccountById(operation.getOrigin());
+        Client_ClientDTO client = this.clientService.getClient(account.getClientByOwner().getId());
 
         List<Client_AccountDTO> accounts = this.accountService.getAccountWithoutMe(client.getId());
         List<String> currencys = this.paymentService.getPayment();
@@ -292,7 +297,7 @@ public class CashierController {
         }
 
         Client_AccountDTO account = this.accountService.getAccountById(operation.getOrigin());
-        Client_ClientDTO client = this.clientService.getClient(operation.getOrigin());
+        Client_ClientDTO client = this.clientService.getClient(account.getClientByOwner().getId());
 
         String urlTo = "redirect:/atm/" + client.getId();
 
@@ -317,6 +322,12 @@ public class CashierController {
         }
         return urlTo;
     }
+
+    /*
+    =================================================================================================
+        FIN CAJERO  -- Autor: Manuel Jesús Jerez
+    =================================================================================================
+    */
 }
 
 

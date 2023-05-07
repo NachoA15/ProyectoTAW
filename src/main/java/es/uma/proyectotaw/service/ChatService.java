@@ -41,16 +41,26 @@ public class ChatService {
         ASISTENTE  -- Autor: Iván Delgado
     =================================================================================================
     */
+
+    /**
+     * @author: Iván Delgado
+     */
     public List<AssistantMessageDTO> getMessages(Integer idChat){
         List<MessageEntity> messages = this.messageRepository.getMessages(idChat);
 
         return this.listEntitiesToDTO(messages);
     }
 
+    /**
+     * @author: Iván Delgado
+     */
     public AssistantChatDTO getChat(Integer idChat){
         return this.chatRepository.findById(idChat).orElse(null).toDTO();
     }
 
+    /**
+     * @author: Iván Delgado
+     */
     protected List<AssistantMessageDTO> listEntitiesToDTO(List<MessageEntity> messages){
         ArrayList<AssistantMessageDTO> dtos = new ArrayList<AssistantMessageDTO>();
 
@@ -58,6 +68,9 @@ public class ChatService {
         return dtos;
     }
 
+    /**
+     * @author: Iván Delgado
+     */
     public void closeChat(Integer id){
         ChatEntity chat = this.chatRepository.findById(id).orElse(null);
         ChatStateEntity state = this.chatStateRepository.getChatState("closed");
@@ -65,6 +78,9 @@ public class ChatService {
         this.chatRepository.save(chat);
     }
 
+    /**
+     * @author: Iván Delgado
+     */
     public AssistantMessageDTO newMessage(Integer id, UserDTO assistantUserDto){
         ChatEntity chat = this.chatRepository.findById(id).orElse(null);
         UserEntity user = this.userRepository.findById(assistantUserDto.getId()).orElse(null);
@@ -76,6 +92,9 @@ public class ChatService {
         return message.toDTO();
     }
 
+    /**
+     * @author: Iván Delgado
+     */
     public void saveNewMessage(AssistantMessageDTO message, UserDTO assistantUserDto){
         MessageEntity newMessage = new MessageEntity();
 
@@ -89,6 +108,9 @@ public class ChatService {
         this.messageRepository.save(newMessage);
     }
 
+    /**
+     * @author: Iván Delgado
+     */
     public List<AssistantChatDTO> getChats(int assistant){
 
         List<ChatEntity> chats = this.chatRepository.getChats(assistant);
@@ -96,27 +118,42 @@ public class ChatService {
         return listChatsToDTO(chats);
     }
 
+    /**
+     * @author: Iván Delgado
+     */
     protected List<AssistantChatDTO> listChatsToDTO(List<ChatEntity> chats){
         ArrayList dtos = new ArrayList<AssistantChatDTO>();
         chats.forEach((final ChatEntity chat) -> dtos.add(chat.toDTO()));
         return dtos;
     }
 
+    /**
+     * @author: Iván Delgado
+     */
     public List<AssistantChatDTO> getChatsByText(int assistant, String text){
         List<ChatEntity> chats = this.chatRepository.getChatsByText(assistant, text);
         return listChatsToDTO(chats);
     }
 
+    /**
+     * @author: Iván Delgado
+     */
     public List<AssistantChatDTO> getChatsByStatus(int assistant, String status){
         List<ChatEntity> chats = this.chatRepository.getChatsByStatus(assistant, status);
         return listChatsToDTO(chats);
     }
 
+    /**
+     * @author: Iván Delgado
+     */
     public List<AssistantChatDTO> getChatsByTextAndStatus(int assistant, String text, String status){
         List<ChatEntity> chats = this.chatRepository.getChatByTextAndStatus(assistant, text, status);
         return listChatsToDTO(chats);
     }
 
+    /**
+     * @author: Iván Delgado
+     */
     public AssistantChatDTO createNewChat(Integer idPerson){
         PersonEntity person = this.personRepository.findById(idPerson).orElse(null);
         List<UserEntity> assistants = this.userRepository.getAssistants();
@@ -133,6 +170,9 @@ public class ChatService {
         return chat.toDTO();
     }
 
+    /**
+     * @author: Iván Delgado
+     */
     public AssistantChatDTO getClientChat(Integer idPerson){
         PersonEntity person = this.personRepository.findById(idPerson).orElse(null);
         ChatEntity chat = this.chatRepository.getClientChat(person.getId());

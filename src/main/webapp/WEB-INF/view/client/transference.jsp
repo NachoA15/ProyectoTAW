@@ -9,6 +9,11 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
+    /**
+     * @author: Marina Sayago
+     */
+%>
+<%
     UserDTO userDTO = (UserDTO) request.getAttribute("user");
 %>
 <html>

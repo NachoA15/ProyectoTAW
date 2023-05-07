@@ -5,7 +5,7 @@ import es.uma.proyectotaw.dto.AddressDTO;
 import java.io.Serializable;
 
 /**
- * @author: Marina Sayago
+ * @author: Marina Sayago - Cliente
  */
 public class Client_ClientDTO implements Serializable {
 

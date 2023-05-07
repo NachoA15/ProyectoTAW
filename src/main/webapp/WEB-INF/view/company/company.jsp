@@ -5,6 +5,11 @@
 <%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
+    /**
+     * @author: Martin Pur
+     */
+%>
+<%
     CompanyEntity company = (CompanyEntity) request.getAttribute("company");
     Boolean isCompanyUser = (Boolean) request.getAttribute("isCompanyUser");
     List<ClientEntity> clients = (List<ClientEntity>) request.getAttribute("clients");

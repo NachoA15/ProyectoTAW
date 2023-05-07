@@ -15,22 +15,37 @@ import java.util.List;
 @Service
 public class ClientStatusService {
 
+    /*
+        =================================================================================================
+            GESTOR  -- Autor: Ignacio Alba
+        =================================================================================================
+     */
+
     // Esta lista siempre se actualiza cuando se obtienen todos los status del repositorio
     private List<ClientStatusEntity> clientStatuses;
 
     @Autowired
     protected ClientStatusRepository clientStatusRepository;
 
+    /**
+     * @author: Ignacio Alba
+     */
     public List<ClientStatusDTO> listClientStatuses() {
         List<ClientStatusEntity> clientStatuses = this.clientStatusRepository.findAll();
         this.clientStatuses = clientStatuses;
         return this.listClientStatusesToDTO(clientStatuses);
     }
 
+    /**
+     * @author: Ignacio Alba
+     */
     public List<String> listStatusesOnStrings() {
         return this.listClientStatusesToStrings(this.clientStatuses);
     }
 
+    /**
+     * @author: Ignacio Alba
+     */
     private List<String> listClientStatusesToStrings(List<ClientStatusEntity> list) {
         List<String> strings = new ArrayList<>();
 
@@ -39,6 +54,9 @@ public class ClientStatusService {
         return strings;
     }
 
+    /**
+     * @author: Ignacio Alba
+     */
     private List<ClientStatusDTO> listClientStatusesToDTO(List<ClientStatusEntity> list) {
         List<ClientStatusDTO> clientStatusDTOS = new ArrayList<>();
 
@@ -46,4 +64,10 @@ public class ClientStatusService {
 
         return clientStatusDTOS;
     }
+
+    /*
+        =================================================================================================
+            FIN GESTOR  -- Autor: Ignacio Alba
+        =================================================================================================
+     */
 }

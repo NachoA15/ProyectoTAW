@@ -1,11 +1,12 @@
 package es.uma.proyectotaw.dto.management;
 
+import es.uma.proyectotaw.dto.client.CurrencyChangeDTO;
 import es.uma.proyectotaw.dto.management.PartialAccountDTO;
 
 import java.sql.Date;
 
 /**
- * @author Ignacio Alba
+ * @author Ignacio Alba - Gestor
  */
 public class OperationDTO {
     private int id;
@@ -13,7 +14,8 @@ public class OperationDTO {
     private PartialAccountDTO destination;
     private Date date;
     private double amount;
-    private String currency;
+    private CurrencyChangeDTO currency;
+    private String payment;
 
     public int getId() {
         return id;
@@ -55,11 +57,19 @@ public class OperationDTO {
         this.amount = amount;
     }
 
-    public String getCurrency() {
+    public CurrencyChangeDTO getCurrency() {
         return currency;
     }
 
-    public void setCurrency(String currency) {
+    public void setCurrency(CurrencyChangeDTO currency) {
         this.currency = currency;
+    }
+
+    public String getPayment() {
+        return payment;
+    }
+
+    public void setPayment(String payment) {
+        this.payment = payment;
     }
 }

@@ -29,6 +29,7 @@
     <ul>
         <li><a href="/clients/pending">View requests of new clients to be registered</a></li>
         <li><a href="/clients/inactive">View clients who haven't been active in 30 days</a></li>
+        <li><a href="/clients/suspicious">View clients involved in suspicious operations</a></li>
     </ul>
 
     <hr/>
@@ -102,7 +103,7 @@
                 <td><%=p.getClient().getAccount().getIban()%></td>
                 <td><%=p.getClient().getAccount().getStatus()%></td>
                 <td><a href="/clients/view/person/<%=p.getId()%>">View more info</a></td>
-                <td><a href="/clients/view/operations/<%=p.getClient().getId()%>">View operations</a></td>
+                <td><a href="/clients/operations/person/<%=p.getId()%>">View internal operations</a></td>
             </tr>
             <%
                 }
@@ -163,7 +164,7 @@
                 <td><%=c.getClient().getAccount().getIban()%></td>
                 <td><%=c.getClient().getAccount().getStatus()%></td>
                 <td><a href="/clients/view/company/<%=c.getId()%>">View more info</a></td>
-                <td><a href="/clients/view/operations/<%=c.getClient().getId()%>">View operations</a></td>
+                <td><a href="/clients/operations/company/<%=c.getId()%>">View internal operations</a></td>
             </tr>
             <%
                 }

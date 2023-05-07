@@ -161,7 +161,6 @@
         <td><b>Surname</b></td>
         <td><b>Email</b></td>
         <td><b>Birth date</b></td>
-        <td><b>Role</b></td>
       </tr>
       </thead>
       <tbody>
@@ -173,7 +172,6 @@
         <td><%=p.getSurname()%></td>
         <td><%=p.getEmail()%></td>
         <td><%=p.getBirthDate()%></td>
-        <td></td>
       </tr>
       <%
         }
@@ -196,11 +194,11 @@
   <%
     if (account == null) {
   %>
-    <a href="/clients/pending">Return</a>
+    <a href="/clients/pending">Return to pending clients</a>
   <%
   } else {
   %>
-    <a href="/clients">Return</a>
+    <a href="/clients">Return to the main page</a>
   <%
     }
   %>

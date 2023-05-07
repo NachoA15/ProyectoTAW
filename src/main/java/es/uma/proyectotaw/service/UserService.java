@@ -37,7 +37,7 @@ public class UserService {
     protected PersonRepository personRepository;
 
     /**
-     * @author: Iván Delgado
+     * @author: Iván Delgado - Asistente
      */
     public UserDTO authenticate(String email, String password){
         UserEntity user = this.userRepository.authenticate(email, password);
@@ -45,7 +45,7 @@ public class UserService {
     }
 
     /**
-     * @author: Marina Sayago
+     * @author: Marina Sayago - Cliente
      */
     public void save(SignUp signUp) throws ParseException {
         UserEntity user = new UserEntity();
